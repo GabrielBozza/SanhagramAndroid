@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
   public void abrirTelaCadastro(View view){
-        Intent intent = new Intent( this, TelaCadastro.class);
+        Intent intent = new Intent( this, ListaConversas.class);
         startActivity(intent);
     }
 

@@ -26,12 +26,13 @@
 
             <ImageView
                 android:id="@+id/Logo"
-                android:layout_width="157dp"
-                android:layout_height="174dp"
+                android:layout_width="253dp"
+                android:layout_height="175dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                tools:srcCompat="@tools:sample/avatars[3]" />
+                app:srcCompat="@drawable/logo_sanhagram"
+                tools:srcCompat="@drawable/logo_sanhagram" />
 
             <EditText
                 android:id="@+id/NomeUsuario"

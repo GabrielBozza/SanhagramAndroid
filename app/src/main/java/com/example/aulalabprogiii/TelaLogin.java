@@ -5,17 +5,13 @@ import com.loopj.android.http.*;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -24,8 +20,12 @@ public class TelaLogin extends AppCompatActivity {
 
     EditText NomeUsuario,Senha;
     Button Login;
+
     String nome,senha;
-    String URL = "http://192.168.15.5:8080/SanhagramServletsJSP/autenticador?dispositivo=android";
+    String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
+    String IdentificadorURL = "/SanhagramServletsJSP/autenticador?dispositivo=android";
+    String URL = PrefixoURL+IdentificadorURL;
+
     RequestParams params;
     AsyncHttpClient client;
     JSONObject json;
@@ -34,6 +34,7 @@ public class TelaLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_login);
+
         NomeUsuario = (EditText)findViewById(R.id.NomeUsuario);
         Senha = (EditText)findViewById(R.id.Senha);
         Login = (Button)findViewById(R.id.BotaoLogin);
@@ -55,17 +56,11 @@ public class TelaLogin extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response){
                         super.onSuccess(statusCode, headers,response);
-                        Toast.makeText(TelaLogin.this,"Login bem sucedido!"+response,Toast.LENGTH_LONG).show();
                         json = response;
-                        String ListaConversas = "";
-                        try {
-                            ListaConversas = response.getJSONArray("AMIGOS").get(0).toString();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Intent intent = new Intent( getApplicationContext(), TelaCadastro.class);
+
+                        Intent intent = new Intent( getApplicationContext(), ListaConversas.class);
                         intent.putExtra("Login",nome);
-                        intent.putExtra("ListaConversas",ListaConversas);
+                        intent.putExtra("ListaConversas",json.toString());
                         startActivity(intent);
                     }
 
