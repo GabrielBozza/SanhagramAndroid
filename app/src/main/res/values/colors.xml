@@ -5,6 +5,9 @@
     <color name="colorAccent">#03DAC5</color>
     <color name="colorBolhaEsquerda">#4287f5</color>
     <color name="colorBolhaDireita">#1ED985</color>
+    <color name="colorBolha_AvisoGrupo">#FA93C0</color>
+    <color name="colorChat">#FFD500</color>
+    <color name="colorChatAvisoGrupo">#000000</color>
     <color name="Conversa">#D2F7F3</color>
     <color name="white">#FFFFFF</color>
 </resources>

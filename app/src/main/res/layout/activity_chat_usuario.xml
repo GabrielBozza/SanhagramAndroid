@@ -4,21 +4,26 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/transparent"
     tools:context=".ChatUsuario">
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="fill_parent"
-        android:layout_height="655dp"
+        android:layout_height="fill_parent"
+        android:background="@color/Conversa"
+        android:fitsSystemWindows="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.026">
+        app:layout_constraintVertical_bias="0.0">
 
         <ScrollView
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/Conversa">
 
             <LinearLayout
                 android:id="@+id/ConversaUsuario"
@@ -26,6 +31,7 @@
                 android:layout_height="660dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:background="@color/Conversa"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -38,22 +44,21 @@
         android:id="@+id/Mensagem"
         android:layout_width="290dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/edittext"
         android:ems="10"
         android:inputType="textMultiLine|text"
+        android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/BotaoEnviar"
-        app:layout_constraintHorizontal_bias="0.64"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-        app:layout_constraintVertical_bias="0.733" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/BotaoEnviar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="32dp"
         android:background="#04F8B3"
         android:onClick="EnviarMensagem"
         android:text="ENVIAR"
