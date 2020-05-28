@@ -58,10 +58,20 @@ public class TelaLogin extends AppCompatActivity {
                         super.onSuccess(statusCode, headers,response);
                         json = response;
 
-                        Intent intent = new Intent( getApplicationContext(), ListaConversas.class);
-                        intent.putExtra("Login",nome);
-                        intent.putExtra("ListaConversas",json.toString());
-                        startActivity(intent);
+                        if(nome.equals("admin")) {
+                            Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                            intent.putExtra("Login", nome);//PARA MANTER REF AO USUARIO
+                            intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
+                            intent.putExtra("ListaConversas", json.toString());
+                            startActivity(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                            intent.putExtra("Login", nome);//PARA MANTER REF AO USUARIO
+                            intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
+                            intent.putExtra("ListaConversas", json.toString());
+                            startActivity(intent);
+                        }
                     }
 
                     @Override

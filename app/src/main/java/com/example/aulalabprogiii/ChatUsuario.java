@@ -37,9 +37,10 @@ public class ChatUsuario extends AppCompatActivity {
     EditText Mensagem;
     ScrollView mScrollView;
 
-    String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
+    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
-    String URL = PrefixoURL+IdentificadorURL;
+    //String URL = PrefixoURL+IdentificadorURL;
+    String URL = "";
 
     RequestParams params;
     AsyncHttpClient client;
@@ -179,7 +180,7 @@ public class ChatUsuario extends AppCompatActivity {
 
         final String login = getIntent().getStringExtra("Login");
 
-        URL = URL + "&login=" + login;
+        URL =  getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -189,11 +190,20 @@ public class ChatUsuario extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-
-                Intent intent = new Intent( getApplicationContext(), ListaConversas.class);
-                intent.putExtra("Login",login);
-                intent.putExtra("ListaConversas",json.toString());
-                startActivity(intent);
+                if(getIntent().getStringExtra("Login").equals("admin")) {
+                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                    intent.putExtra("Login", login);
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                    intent.putExtra("Login", login);
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
             }
 
             @Override
@@ -218,9 +228,7 @@ public class ChatUsuario extends AppCompatActivity {
             return;
         }
 
-        //texto_mensagem = URLEncoder.encode(texto_mensagem, "UTF-8");----TESTAR
-
-        String URLenviar = "http://192.168.15.5:8080/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
+        String URLenviar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
         params.put("remetente",remetente);
@@ -239,6 +247,7 @@ public class ChatUsuario extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
                 intent.putExtra("Login", remetente);
+                intent.putExtra("PrefixoURL",getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", destinatario);
                 startActivity(intent);
             }

@@ -22,9 +22,10 @@ import cz.msebera.android.httpclient.Header;
 
 public class ListaConversas extends AppCompatActivity {
 
-    String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
+    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android";
-    String URL = PrefixoURL + IdentificadorURL;
+    String URL = "";
+    //String URL = PrefixoURL + IdentificadorURL;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -43,32 +44,47 @@ public class ListaConversas extends AppCompatActivity {
 
             JSONObject response = new JSONObject(resultado);
 
-            GradientDrawable Opcao_Conversa = new GradientDrawable();
-            Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa)); // Changes this drawbale to use a single color instead of a gradient
-            Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
-            Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
-
-
             try {
+                GradientDrawable Titulo = new GradientDrawable();
+                Titulo.setColor(getResources().getColor(R.color.transparent)); // Changes this drawbale to use a single color instead of a gradient
+                Titulo.setShape(GradientDrawable.RECTANGLE);
+                Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
+                Chat = new Button(this);
+                Chat.setText("Conversas");
+                Chat.setTransformationMethod(null);
+                Chat.setWidth(850);
+                Chat.setPadding(10,10,10,10);
+                Chat.setTextSize(23);
+                Chat.setBackground(Titulo);
+                Chat.setGravity(Gravity.CENTER);
+                Chat.setClickable(false);
+                layout.addView(Chat);
+
                 for (int i = 0; i < response.getJSONArray("CONVERSAS").length(); i++) {
 
+                    GradientDrawable Opcao_Conversa = new GradientDrawable();
+                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa)); // Changes this drawbale to use a single color instead of a gradient
+                    Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
+                    Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
+
                     final String amigo = response.getJSONArray("CONVERSAS").get(i).toString();
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
+                    //LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
                     Chat = new Button(this);
                     Chat.setText(amigo);
                     Chat.setTransformationMethod(null);
-                    Chat.setMaxWidth(600);
+                    Chat.setWidth(850);
                     Chat.setPadding(10,10,10,10);
-                    Chat.setTextSize(16);
+                    Chat.setTextSize(20);
                     Chat.setBackground(Opcao_Conversa);
-                    Chat.setGravity(Gravity.CENTER);
+                    Chat.setGravity(Gravity.LEFT);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.setMargins(16,10,16,10);
                     params.gravity=Gravity.CENTER;
                     Chat.setLayoutParams(params);
-                    Chat.setMinimumWidth(600);
 
                     Chat.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -76,7 +92,6 @@ public class ListaConversas extends AppCompatActivity {
                             VerChat(login, amigo);
                         }
                     });
-
 
                     layout.addView(Chat);
                 }
@@ -93,7 +108,7 @@ public class ListaConversas extends AppCompatActivity {
         final String remetente = a;
         final String destinatario = b;
 
-        URL = URL + "&remetente=" + remetente + "&destinatario=" + destinatario;
+        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&remetente=" + remetente + "&destinatario=" + destinatario;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -107,6 +122,7 @@ public class ListaConversas extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
                 intent.putExtra("Login", remetente);
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", destinatario);
                 startActivity(intent);
             }
