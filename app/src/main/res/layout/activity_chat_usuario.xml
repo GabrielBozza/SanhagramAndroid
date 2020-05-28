@@ -21,9 +21,12 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ScrollView
+            android:id="@+id/chatScrollView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Conversa">
+            android:background="@color/Conversa"
+
+            android:transcriptMode="alwaysScroll">
 
             <LinearLayout
                 android:id="@+id/ConversaUsuario"
@@ -40,28 +43,38 @@
         </ScrollView>
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/Mensagem"
-        android:layout_width="290dp"
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/edittext"
-        android:ems="10"
-        android:inputType="textMultiLine|text"
-        android:padding="10dp"
+        app:cardCornerRadius="13dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/BotaoEnviar"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <EditText
+            android:id="@+id/Mensagem"
+            android:layout_width="260dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:background="@drawable/edittext"
+            android:ems="10"
+            android:inputType="textMultiLine|text"
+            android:padding="11dp" />
+    </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/BotaoEnviar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="24dp"
         android:layout_marginBottom="32dp"
-        android:background="#04F8B3"
+        android:background="@drawable/botao_geral"
         android:onClick="EnviarMensagem"
         android:text="ENVIAR"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout"

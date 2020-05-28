@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,8 @@ public class ChatUsuario extends AppCompatActivity {
 
     Button BotaoEnviar, Texto_Mensagem;
     EditText Mensagem;
+    ScrollView mScrollView;
+
     String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = PrefixoURL+IdentificadorURL;
@@ -49,6 +52,7 @@ public class ChatUsuario extends AppCompatActivity {
 
         Mensagem = (EditText)findViewById(R.id.Mensagem);
         BotaoEnviar = (Button)findViewById(R.id.BotaoEnviar);
+        mScrollView = (ScrollView)findViewById(R.id.chatScrollView);
 
         String resultado = getIntent().getStringExtra("MensagensConversa");
         String login = getIntent().getStringExtra("Login");
@@ -142,6 +146,17 @@ public class ChatUsuario extends AppCompatActivity {
 
                     layout.addView(Texto_Mensagem);
                 }
+
+                GradientDrawable Espaco_vazio = new GradientDrawable();
+                Espaco_vazio.setColor(getResources().getColor(R.color.transparent));
+                Espaco_vazio.setShape(GradientDrawable.RECTANGLE);
+
+                LinearLayout layout = (LinearLayout) findViewById(R.id.ConversaUsuario);
+                Texto_Mensagem = new Button(this);
+                Texto_Mensagem.setText("\n\n\n");
+                Texto_Mensagem.setBackground(Espaco_vazio);
+                layout.addView(Texto_Mensagem);//ADICIONA ESPACO VAZIO APOS A UTLIMA MENSAGEM
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -149,6 +164,13 @@ public class ChatUsuario extends AppCompatActivity {
             Log.d("Error", err.toString());
         }
 
+        mScrollView.post(new Runnable() {//VAI P FINAL DA CONVERSA
+
+            @Override
+            public void run() {
+                mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
 
     }
 

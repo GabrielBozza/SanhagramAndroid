@@ -10,4 +10,6 @@
     <color name="colorChatAvisoGrupo">#000000</color>
     <color name="Conversa">#D2F7F3</color>
     <color name="white">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
+
 </resources>

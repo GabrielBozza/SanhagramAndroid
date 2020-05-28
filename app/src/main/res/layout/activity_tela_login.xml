@@ -12,7 +12,9 @@
         android:id="@+id/cardView"
         android:layout_width="300dp"
         android:layout_height="400dp"
-        android:background="#ffffff"
+        android:background="@drawable/card_login"
+        app:cardElevation="7dp"
+        app:cardCornerRadius="12dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,25 +36,50 @@
                 app:srcCompat="@drawable/logo_sanhagram"
                 tools:srcCompat="@drawable/logo_sanhagram" />
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="13dp">
             <EditText
                 android:id="@+id/NomeUsuario"
                 android:layout_width="268dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
+                android:padding="10dp"
+                android:background="@drawable/edittext"
+                android:textAlignment="center"
+                android:textColorHint="#c7c7c7"
+                android:layout_marginBottom="0dp"
                 android:ems="10"
                 android:hint="Nome de usuário"
                 android:inputType="textPersonName" />
+            </androidx.cardview.widget.CardView>
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="13dp">
             <EditText
+
                 android:id="@+id/Senha"
                 android:layout_width="268dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="16dp"
+                android:background="@drawable/edittext"
+                android:padding="10dp"
+                android:textColorHint="#c7c7c7"
+                android:textAlignment="center"
+                android:layout_marginBottom="0dp"
                 android:ems="10"
                 android:hint="Senha"
                 android:inputType="textPassword" />
+            </androidx.cardview.widget.CardView>
 
             <Button
                 android:id="@+id/BotaoLogin"
@@ -60,7 +87,7 @@
                 android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:background="#43e6c5"
+                android:background="@drawable/botao_geral"
                 android:text="Login" />
         </LinearLayout>
     </androidx.cardview.widget.CardView>
