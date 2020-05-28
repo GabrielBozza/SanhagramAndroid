@@ -13,12 +13,23 @@
         android:layout_height="fill_parent"
         android:background="@color/Conversa"
         android:fitsSystemWindows="true"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0">
+
+        <LinearLayout
+            android:id="@+id/Cabecalho"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/chatScrollView" />
 
         <ScrollView
             android:id="@+id/chatScrollView"
@@ -56,10 +67,11 @@
 
         <EditText
             android:id="@+id/Mensagem"
-            android:layout_width="260dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="0dp"
             android:background="@drawable/edittext"
+            android:hint="Pense bem..."
             android:ems="10"
             android:inputType="textMultiLine|text"
             android:padding="11dp" />

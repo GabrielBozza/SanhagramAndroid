@@ -1,6 +1,7 @@
 package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.drawable.IconCompat;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
@@ -46,7 +47,7 @@ public class ListaConversas extends AppCompatActivity {
 
             try {
                 GradientDrawable Titulo = new GradientDrawable();
-                Titulo.setColor(getResources().getColor(R.color.transparent)); // Changes this drawbale to use a single color instead of a gradient
+                Titulo.setColor(getResources().getColor(R.color.transparent));
                 Titulo.setShape(GradientDrawable.RECTANGLE);
                 Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
@@ -104,6 +105,11 @@ public class ListaConversas extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(ListaConversas.this,"Para realizar logout clique no botão sair!",Toast.LENGTH_LONG).show();
+    }
+
     public void VerChat(String a, String b) {
         final String remetente = a;
         final String destinatario = b;
@@ -138,5 +144,19 @@ public class ListaConversas extends AppCompatActivity {
 
     }
 
+    public void abrirTelaEnviarMensagemDireto(View view){
 
+        Intent intent = new Intent( this, EnviarMensagemDireto.class);
+        intent.putExtra("Login", getIntent().getStringExtra("Login"));
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        startActivity(intent);
+
+    }
+
+    public void Sair(View view){
+
+        Intent intent = new Intent( this, TelaLogin.class);
+        startActivity(intent);
+
+    }
 }

@@ -33,7 +33,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class ChatUsuario extends AppCompatActivity {
 
-    Button BotaoEnviar, Texto_Mensagem;
+    Button BotaoEnviar, Texto_Mensagem,NomeConversa;
     EditText Mensagem;
     ScrollView mScrollView;
 
@@ -70,6 +70,50 @@ public class ChatUsuario extends AppCompatActivity {
             JSONObject response = new JSONObject(resultado);
 
             try {
+
+                GradientDrawable CabecalhoChat = new GradientDrawable();
+                CabecalhoChat.setColor(getResources().getColor(R.color.transparent));
+                CabecalhoChat.setShape(GradientDrawable.RECTANGLE);
+                CabecalhoChat.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
+
+                LinearLayout layoutCabecalho = (LinearLayout) findViewById(R.id.Cabecalho);
+                NomeConversa = new Button(this);
+                NomeConversa.setText(getIntent().getStringExtra("Destinatario"));
+                NomeConversa.setTransformationMethod(null);
+                NomeConversa.setWidth(550);
+                NomeConversa.setPadding(44,16,10,16);
+                NomeConversa.setTextSize(22);
+                NomeConversa.setBackground(CabecalhoChat);
+                NomeConversa.setGravity(Gravity.LEFT);
+                NomeConversa.setClickable(false);
+                layoutCabecalho.addView(NomeConversa);
+
+                if(response.getJSONArray("MENSAGENS").getJSONObject(0).get("flag_grupo").toString().equals("1")){
+
+                    GradientDrawable Botao_SairGrupo = new GradientDrawable();
+                    Botao_SairGrupo.setColor(getResources().getColor(R.color.colorBotaoSairGrupo));
+                    Botao_SairGrupo.setShape(GradientDrawable.RECTANGLE);
+                    Botao_SairGrupo.setCornerRadii(new float[]{45, 45, 25, 25, 45, 45, 25, 25});
+
+                    NomeConversa = new Button(this);
+                    NomeConversa.setText("Sair do grupo");
+                    NomeConversa.setTransformationMethod(null);
+                    NomeConversa.setWidth(300);
+                    NomeConversa.setPadding(20,16,20,16);
+                    NomeConversa.setTextSize(14);
+                    NomeConversa.setBackground(Botao_SairGrupo);
+                    NomeConversa.setGravity(Gravity.CENTER);
+                    //NomeConversa.setClickable(false);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT);
+                    params.gravity=Gravity.RIGHT;
+                    params.setMargins(220,0,8,0);
+                    NomeConversa.setLayoutParams(params);
+
+                    layoutCabecalho.addView(NomeConversa);
+
+                }
+
                 for(int i=0;i<response.getJSONArray("MENSAGENS").length();i++) {
 
                     int raio =35;

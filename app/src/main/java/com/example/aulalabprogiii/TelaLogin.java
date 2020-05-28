@@ -90,4 +90,9 @@ public class TelaLogin extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(TelaLogin.this,"Você não está logado!",Toast.LENGTH_LONG).show();
+    }
+
 }

@@ -102,6 +102,11 @@ public class AdminListaConversas extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(AdminListaConversas.this,"Para realizar logout clique no botão sair!",Toast.LENGTH_LONG).show();
+    }
+
     public void VerChat(String a, String b) {
         final String remetente = a;
         final String destinatario = b;
@@ -136,5 +141,125 @@ public class AdminListaConversas extends AppCompatActivity {
 
     }
 
+    public void ListarUsuarios(View view) {
+
+        URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login");
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                intent.putExtra("ListaUsuarios", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    public void ListarGrupos(View view) {
+
+        URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login");
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                intent.putExtra("ListaGrupos", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    public void CriarGrupo(View view) {
+
+        URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login");
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), AdminCriarGrupo.class);
+                intent.putExtra("ListaUsuarios", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    public void abrirTelaCadastroUsuario(View view){
+
+        Intent intent = new Intent( this, AdminCadastrarUsuario.class);
+        intent.putExtra("Login", getIntent().getStringExtra("Login"));
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        startActivity(intent);
+
+    }
+
+    public void abrirTelaEnviarMensagemDireto(View view){
+
+        Intent intent = new Intent( this, EnviarMensagemDireto.class);
+        intent.putExtra("Login", getIntent().getStringExtra("Login"));
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        startActivity(intent);
+
+    }
+
+    public void Sair(View view){
+
+        Intent intent = new Intent( this, TelaLogin.class);
+        startActivity(intent);
+
+    }
 
 }
