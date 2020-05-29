@@ -88,7 +88,14 @@ public class ChatUsuario extends AppCompatActivity {
                 NomeConversa.setTextSize(22);
                 NomeConversa.setBackground(CabecalhoChat);
                 NomeConversa.setGravity(Gravity.LEFT);
-                NomeConversa.setClickable(false);
+
+                NomeConversa.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Refresh(v);
+                    }
+                });
+
                 layoutCabecalho.addView(NomeConversa);
 
                 if(response.getJSONArray("MENSAGENS").getJSONObject(0).get("flag_grupo").toString().equals("1")){
@@ -424,6 +431,39 @@ public class ChatUsuario extends AppCompatActivity {
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
                 Toast.makeText(ChatUsuario.this, "Mensagem apagada!", Toast.LENGTH_SHORT).show();
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
+                intent.putExtra("MensagensConversa", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
+
+    public void Refresh(View view) {
+
+        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
+                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario");
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(ChatUsuario.this, "Chat atualizado!", Toast.LENGTH_SHORT).show();
                 json = response;
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);

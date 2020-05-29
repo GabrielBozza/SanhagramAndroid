@@ -56,7 +56,12 @@ public class AdminListaConversas extends AppCompatActivity {
             Chat.setTextSize(23);
             Chat.setBackground(Titulo);
             Chat.setGravity(Gravity.CENTER);
-            Chat.setClickable(false);
+            Chat.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Refresh(v);
+                }
+            });
             layout.addView(Chat);
 
 
@@ -217,7 +222,49 @@ public class AdminListaConversas extends AppCompatActivity {
     public void Sair(View view){
 
         Intent intent = new Intent( this, TelaLogin.class);
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
         startActivity(intent);
+
+    }
+
+    public void Refresh(View view) {
+
+        URL =  getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login");
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(AdminListaConversas.this, "Lista atualizada!", Toast.LENGTH_SHORT).show();
+
+                json = response;
+                if(getIntent().getStringExtra("Login").equals("admin")) {
+                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
 
     }
 

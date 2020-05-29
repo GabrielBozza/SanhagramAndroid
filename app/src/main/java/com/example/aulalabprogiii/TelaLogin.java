@@ -21,10 +21,10 @@ public class TelaLogin extends AppCompatActivity {
     EditText NomeUsuario,Senha;
     Button Login;
 
-    String nome,senha;
-    String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
+    String nome,senha,PrefixoURL,URL;
+    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/autenticador?dispositivo=android";
-    String URL = PrefixoURL+IdentificadorURL;
+
 
     RequestParams params;
     AsyncHttpClient client;
@@ -34,6 +34,9 @@ public class TelaLogin extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_login);
+
+        PrefixoURL = getIntent().getStringExtra("PrefixoURL");
+        URL = PrefixoURL+IdentificadorURL;
 
         NomeUsuario = (EditText)findViewById(R.id.NomeUsuario);
         Senha = (EditText)findViewById(R.id.Senha);
