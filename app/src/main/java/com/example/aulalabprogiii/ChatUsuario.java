@@ -1,7 +1,10 @@
 package com.example.aulalabprogiii;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -39,9 +42,7 @@ public class ChatUsuario extends AppCompatActivity {
     EditText Mensagem;
     ScrollView mScrollView;
 
-    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
-    //String URL = PrefixoURL+IdentificadorURL;
     String URL = "";
 
     RequestParams params;
@@ -111,6 +112,34 @@ public class ChatUsuario extends AppCompatActivity {
                     params.gravity=Gravity.RIGHT;
                     params.setMargins(220,0,8,0);
                     NomeConversa.setLayoutParams(params);
+
+                    
+                    NomeConversa.setOnLongClickListener(new View.OnLongClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
+                        @Override
+                        public boolean onLongClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ChatUsuario.this);
+                            builder.setCancelable(true);
+                            builder.setTitle("Sair do "+getIntent().getStringExtra("Destinatario"));
+                            builder.setMessage("Você deseja sair do grupo?");
+                            builder.setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            SairGrupo(getIntent().getStringExtra("Destinatario"));
+                                        }
+                                    });
+                            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            return true;
+                        }
+                    });
 
                     layoutCabecalho.addView(NomeConversa);
 
@@ -308,6 +337,48 @@ public class ChatUsuario extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void SairGrupo(String a){
+
+        String nomeGrupo = a ;
+
+        URL =  getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=sairDoGrupo&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login") + "&nomeGrupo=" + nomeGrupo;
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(ChatUsuario.this, "Você saiu do grupo!", Toast.LENGTH_SHORT).show();
+
+                json = response;
+                if(getIntent().getStringExtra("Login").equals("admin")) {
+                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
+                else{
+                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaConversas", json.toString());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
 }
