@@ -43,12 +43,34 @@ public class AdminListarUsuarios extends AppCompatActivity {
             JSONObject response = new JSONObject(resultado);
 
             try {
+                GradientDrawable BotaoCadastro = new GradientDrawable();
+                BotaoCadastro.setColor(getResources().getColor(R.color.colorAccent));
+                BotaoCadastro.setShape(GradientDrawable.RECTANGLE);
+                BotaoCadastro.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
+
                 GradientDrawable Titulo = new GradientDrawable();
                 Titulo.setColor(getResources().getColor(R.color.transparent));
                 Titulo.setShape(GradientDrawable.RECTANGLE);
                 Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
                 LinearLayout layout = (LinearLayout) findViewById(R.id.ListaUsuariosLinearLayout);
+
+                BotaoUsuario = new Button(this);
+                BotaoUsuario.setText("Cadastrar Usuário");
+                BotaoUsuario.setTransformationMethod(null);
+                BotaoUsuario.setWidth(450);
+                BotaoUsuario.setPadding(10, 16, 10, 16);
+                BotaoUsuario.setTextSize(16);
+                BotaoUsuario.setTextColor(getResources().getColor(R.color.white));
+                BotaoUsuario.setBackground(BotaoCadastro);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                params.setMargins(16, 10, 16, 10);
+                params.gravity = Gravity.CENTER;
+                BotaoUsuario.setLayoutParams(params);
+                BotaoUsuario.setGravity(Gravity.CENTER);
+                layout.addView(BotaoUsuario);
+
                 BotaoUsuario = new Button(this);
                 BotaoUsuario.setText("Lista de Usuários");
                 BotaoUsuario.setTransformationMethod(null);
@@ -63,7 +85,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 for (int i = 0; i < response.getJSONArray("USUARIOS").length(); i++) {
 
                     GradientDrawable Opcao_Conversa = new GradientDrawable();
-                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa)); // Changes this drawbale to use a single color instead of a gradient
+                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa));
                     Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
                     Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
@@ -78,11 +100,11 @@ public class AdminListarUsuarios extends AppCompatActivity {
                     BotaoUsuario.setBackground(Opcao_Conversa);
                     BotaoUsuario.setGravity(Gravity.CENTER);
 
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams paramss = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.setMargins(16, 10, 16, 10);
-                    params.gravity = Gravity.CENTER;
-                    BotaoUsuario.setLayoutParams(params);
+                    paramss.setMargins(16, 10, 16, 10);
+                    paramss.gravity = Gravity.CENTER;
+                    BotaoUsuario.setLayoutParams(paramss);
 
                     BotaoUsuario.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -160,7 +182,6 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AdminAlterarUsuario.class);
                 intent.putExtra("UsuarioAlterar", json.toString());
-                System.out.println(json.toString());
                 intent.putExtra("Login", getIntent().getStringExtra("Login"));
                 intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
@@ -174,6 +195,15 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public void abrirTelaCadastroUsuario(View view){
+
+        Intent intent = new Intent( this, AdminCadastrarUsuario.class);
+        intent.putExtra("Login", getIntent().getStringExtra("Login"));
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        startActivity(intent);
 
     }
 

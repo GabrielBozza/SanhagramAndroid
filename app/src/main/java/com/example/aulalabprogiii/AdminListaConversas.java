@@ -187,7 +187,7 @@ public class AdminListaConversas extends AppCompatActivity {
 
                 json = response;
 
-                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
                 intent.putExtra("ListaGrupos", json.toString());
                 intent.putExtra("Login", getIntent().getStringExtra("Login"));
                 intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
@@ -234,15 +234,6 @@ public class AdminListaConversas extends AppCompatActivity {
 
             }
         });
-
-    }
-
-    public void abrirTelaCadastroUsuario(View view){
-
-        Intent intent = new Intent( this, AdminCadastrarUsuario.class);
-        intent.putExtra("Login", getIntent().getStringExtra("Login"));
-        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-        startActivity(intent);
 
     }
 
