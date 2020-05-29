@@ -4,13 +4,150 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:background="@color/Conversa"
     tools:context=".AdminAlterarUsuario">
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewAlterarCadastro"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:text="TextView"
-        tools:layout_editor_absoluteX="161dp"
-        tools:layout_editor_absoluteY="285dp" />
+        android:background="@drawable/card_login"
+        app:cardElevation="7dp"
+        app:cardCornerRadius="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/TituloAlterarCadastro"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="Alterar Cadastro"
+                android:textAlignment="center"
+                android:textFontWeight="700"
+                android:textSize="25dp"/>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="13dp">
+                <TextView
+                    android:id="@+id/NomeUsuarioCadastro"
+                    android:layout_width="268dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="10dp"
+                    android:background="@drawable/botao_verde_claro"
+                    android:textSize="22dp"
+                    android:textAlignment="center"
+                    android:textColorHint="#c7c7c7"
+                    android:layout_marginBottom="0dp"
+                    android:ems="10" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="13dp">
+                <EditText
+
+                    android:id="@+id/EmailCadastro"
+                    android:layout_width="268dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/edittext"
+                    android:padding="10dp"
+                    android:textColorHint="#c7c7c7"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="0dp"
+                    android:ems="10"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="13dp">
+                <EditText
+
+                    android:id="@+id/SenhaCadastro"
+                    android:layout_width="268dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/edittext"
+                    android:padding="10dp"
+                    android:textColorHint="#c7c7c7"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="0dp"
+                    android:ems="10"
+                    android:hint="Senha"
+                    android:inputType="textPassword" />
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                app:cardElevation="3dp"
+                android:layout_marginBottom="32dp"
+                app:cardCornerRadius="13dp">
+                <EditText
+
+                    android:id="@+id/DataNascCadastro"
+                    android:layout_width="268dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/edittext"
+                    android:padding="10dp"
+                    android:textColorHint="#c7c7c7"
+                    android:textAlignment="center"
+                    android:layout_marginBottom="0dp"
+                    android:ems="10"
+                    android:hint="Data de nasc.(dd/mm/yyyy)"
+                    android:inputType="date" />
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/BotaoCadastrar"
+                android:layout_width="268dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/botao_geral"
+                android:onClick="AlterarCadastro"
+                android:text="SALVAR ALTERAÇÕES"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/BotaoExcluirUsuario"
+                android:layout_width="268dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/botao_excluir"
+                android:text="EXCLUIR USUÁRIO"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

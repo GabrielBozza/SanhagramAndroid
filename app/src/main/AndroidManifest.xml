@@ -16,7 +16,7 @@
         <activity android:name=".AdminCadastrarUsuario"
             android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".AdminAlterarUsuario"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".AdminAlterarGrupo" />
         <activity android:name=".AdminListarGrupos" />
         <activity android:name=".AdminListarUsuarios" />

@@ -70,7 +70,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-
+                Toast.makeText(AdminCadastrarUsuario.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
                 json = response;
 
                 Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
