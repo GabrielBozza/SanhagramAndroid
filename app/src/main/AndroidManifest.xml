@@ -13,8 +13,10 @@
         android:theme="@style/AppTheme">
         <activity android:name=".AdminCriarGrupo"></activity>
         <activity android:name=".AdminListaConversas" />
-        <activity android:name=".AdminCadastrarUsuario" />
-        <activity android:name=".AdminAlterarUsuario" />
+        <activity android:name=".AdminCadastrarUsuario"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".AdminAlterarUsuario"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".AdminAlterarGrupo" />
         <activity android:name=".AdminListarGrupos" />
         <activity android:name=".AdminListarUsuarios" />

@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:background="@drawable/botao_geral"
+        android:onClick="ListarUsuarios"
         android:text="USUÁRIOS"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
