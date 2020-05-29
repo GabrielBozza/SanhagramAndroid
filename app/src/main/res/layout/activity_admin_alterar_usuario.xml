@@ -145,6 +145,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/botao_excluir"
+                android:onClick="ExcluirUsuario"
                 android:text="EXCLUIR USUÁRIO"
                 android:textColor="@color/white" />
         </LinearLayout>

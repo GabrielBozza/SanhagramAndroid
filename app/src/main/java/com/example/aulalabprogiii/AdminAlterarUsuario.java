@@ -53,8 +53,44 @@ public class AdminAlterarUsuario extends AppCompatActivity {
 
     }
 
-    public void ExcluirUsuario(){
+    public void ExcluirUsuario(View view){
 
+        String nomeUsuarioExcluir = nomeUsu.getText().toString();
+
+        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirUsuario&dispositivo=android"
+                + "&login=" + getIntent().getStringExtra("Login") + "&nomeusuario="+ nomeUsuarioExcluir;
+
+        if(nomeUsuarioExcluir.equals("admin")){ //NÃO PODE DELETAR O ADMIN - SUICÍDIO
+            Toast.makeText(AdminAlterarUsuario.this, "Não se mate!!!! Não deixo!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                json = response;
+                if (getIntent().getStringExtra("Login").equals("admin")) {
+                    Toast.makeText(AdminAlterarUsuario.this, "Usuário removido com sucesso!", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                    intent.putExtra("ListaUsuarios", json.toString());
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
 
     }
 
