@@ -106,14 +106,12 @@ public class ChatUsuario extends AppCompatActivity {
                     NomeConversa.setTextSize(14);
                     NomeConversa.setBackground(Botao_SairGrupo);
                     NomeConversa.setGravity(Gravity.CENTER);
-                    //NomeConversa.setClickable(false);
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);
                     params.gravity=Gravity.RIGHT;
                     params.setMargins(220,0,8,0);
                     NomeConversa.setLayoutParams(params);
 
-                    
                     NomeConversa.setOnLongClickListener(new View.OnLongClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
                         @Override
                         public boolean onLongClick(View v) {
@@ -164,6 +162,7 @@ public class ChatUsuario extends AppCompatActivity {
                     Bolha_direita.setCornerRadii(new float[]{raio, raio, 5, 5, raio, raio, raio, raio});
 
                     String remetente = response.getJSONArray("MENSAGENS").getJSONObject(i).get("remetente").toString();
+                    final String idmensagem = response.getJSONArray("MENSAGENS").getJSONObject(i).get("idmensagem").toString();
                     String destinatario = response.getJSONArray("MENSAGENS").getJSONObject(i).get("destinatario").toString();
                     String texto = response.getJSONArray("MENSAGENS").getJSONObject(i).get("texto_mensagem").toString();
                     String hora_envio = response.getJSONArray("MENSAGENS").getJSONObject(i).get("data_envio").toString().substring(11,16);
@@ -197,6 +196,33 @@ public class ChatUsuario extends AppCompatActivity {
                         params.setMargins(16,10,8,10);
                         Texto_Mensagem.setLayoutParams(params);
 
+                        Texto_Mensagem.setOnLongClickListener(new View.OnLongClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
+                            @Override
+                            public boolean onLongClick(View v) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ChatUsuario.this);
+                                builder.setCancelable(true);
+                                builder.setTitle("Apagar Mensagem");
+                                builder.setMessage("Você deseja apagar a mensagem?");
+                                builder.setPositiveButton("Sim",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                ApagarMensagem(idmensagem);
+                                            }
+                                        });
+                                builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                    }
+                                });
+
+                                AlertDialog dialog = builder.create();
+                                dialog.show();
+
+                                return true;
+                            }
+                        });
+
                     }
                     else if (remetente.equals(destinatario)){
                         Texto_Mensagem.setBackground(Bolha_AvisoGrupo);
@@ -206,6 +232,7 @@ public class ChatUsuario extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(8,10,16,10);
                         Texto_Mensagem.setLayoutParams(params);
+                        Texto_Mensagem.setClickable(false);
                     }
                     else {
                         Texto_Mensagem.setBackground(Bolha_esquerda);
@@ -215,10 +242,10 @@ public class ChatUsuario extends AppCompatActivity {
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(8,10,16,10);
                         Texto_Mensagem.setLayoutParams(params);
+                        Texto_Mensagem.setClickable(false);
                     }
                     Texto_Mensagem.setPadding(16,16,16,16);
                     Texto_Mensagem.setTextSize(15);
-                    Texto_Mensagem.setClickable(false);
 
                     layout.addView(Texto_Mensagem);
                 }
@@ -379,6 +406,42 @@ public class ChatUsuario extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void ApagarMensagem(String a) {
+
+        final String idMensagem = a;
+
+        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
+                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+                + "&idmensagem=" + idMensagem;
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(ChatUsuario.this, "Mensagem apagada!", Toast.LENGTH_SHORT).show();
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
+                intent.putExtra("MensagensConversa", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
     }
 
 }
