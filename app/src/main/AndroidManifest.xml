@@ -18,9 +18,11 @@
         <activity android:name=".AdminAlterarGrupo" />
         <activity android:name=".AdminListarGrupos" />
         <activity android:name=".AdminListarUsuarios" />
-        <activity android:name=".MensagensSalvas" />
+        <activity android:name=".MensagensSalvas"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".SalvarMensagem" />
-        <activity android:name=".EnviarMensagemDireto" />
+        <activity android:name=".EnviarMensagemDireto"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ChatUsuario"
             android:windowSoftInputMode="adjustPan" />

@@ -23,10 +23,8 @@ import cz.msebera.android.httpclient.Header;
 
 public class ListaConversas extends AppCompatActivity {
 
-    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android";
     String URL = "";
-    //String URL = PrefixoURL + IdentificadorURL;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -144,6 +142,38 @@ public class ListaConversas extends AppCompatActivity {
 
     }
 
+    public void VerMensagensSalvas(View view) {
+
+        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&remetente=" + getIntent().getStringExtra("Login")
+                + "&destinatario=ADefinirUsuario";
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
+                intent.putExtra("MensagensConversa", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login") );
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                intent.putExtra("Destinatario", "ADefinirUsuario");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
+
+            }
+        });
+
+    }
     public void abrirTelaEnviarMensagemDireto(View view){
 
         Intent intent = new Intent( this, EnviarMensagemDireto.class);

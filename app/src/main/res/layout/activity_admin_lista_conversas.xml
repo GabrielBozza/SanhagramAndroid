@@ -4,22 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ListaConversas">
+    tools:context=".AdminListaConversas">
 
 
     <Button
         android:id="@+id/BotaoEnviarDireto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:background="@drawable/botao_geral"
+        android:onClick="abrirTelaEnviarMensagemDireto"
         android:text="Enviar"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toStartOf="@+id/BotaoSalvarMensagem"
+        app:layout_constraintEnd_toStartOf="@+id/BotaoCadastro"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/BotaoMensagensSalvas"
+        android:id="@+id/BotaoUsuarios"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:background="@drawable/botao_geral"
+        android:text="USUÁRIOS"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toStartOf="@+id/BotaoGrupos" />
+
+    <Button
+        android:id="@+id/BotaoGrupos"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -40,17 +53,6 @@
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <Button
-        android:id="@+id/BotaoSalvarMensagem"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:background="@drawable/botao_geral"
-        android:text="Cadastro"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
-        app:layout_constraintEnd_toStartOf="@+id/BotaoMensagensSalvas" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -76,8 +78,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView" />
+                app:layout_constraintTop_toBottomOf="@+id/textView">
+
+            </LinearLayout>
         </ScrollView>
     </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

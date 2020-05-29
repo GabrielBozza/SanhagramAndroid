@@ -26,10 +26,12 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class ChatUsuario extends AppCompatActivity {
 
