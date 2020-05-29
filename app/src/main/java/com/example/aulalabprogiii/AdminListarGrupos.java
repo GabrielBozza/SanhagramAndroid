@@ -182,6 +182,7 @@ public class AdminListarGrupos extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AdminAlterarGrupo.class);
                 intent.putExtra("UsuariosGrupo", json.toString());
+                intent.putExtra("NomeGrupo", nomeGrupo);
                 intent.putExtra("Login", getIntent().getStringExtra("Login"));
                 intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);

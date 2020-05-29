@@ -44,18 +44,19 @@
                 app:cardElevation="3dp"
                 android:layout_marginBottom="32dp"
                 app:cardCornerRadius="13dp">
+
                 <TextView
                     android:id="@+id/NomeUsuarioCadastro"
                     android:layout_width="268dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:padding="10dp"
+                    android:layout_marginBottom="0dp"
                     android:background="@drawable/botao_verde_claro"
-                    android:textSize="22dp"
+                    android:ems="10"
+                    android:padding="10dp"
                     android:textAlignment="center"
                     android:textColorHint="#c7c7c7"
-                    android:layout_marginBottom="0dp"
-                    android:ems="10" />
+                    android:textSize="22dp" />
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
