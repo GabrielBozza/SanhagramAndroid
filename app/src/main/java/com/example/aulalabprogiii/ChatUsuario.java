@@ -102,7 +102,8 @@ public class ChatUsuario extends AppCompatActivity {
                     NomeConversa.setText("Sair do grupo");
                     NomeConversa.setTransformationMethod(null);
                     NomeConversa.setWidth(300);
-                    NomeConversa.setPadding(20,16,20,16);
+                    NomeConversa.setTextColor(getResources().getColor(R.color.white));
+                    NomeConversa.setPadding(16,10,10,16);
                     NomeConversa.setTextSize(14);
                     NomeConversa.setBackground(Botao_SairGrupo);
                     NomeConversa.setGravity(Gravity.CENTER);

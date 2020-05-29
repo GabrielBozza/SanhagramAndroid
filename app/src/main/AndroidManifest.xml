@@ -22,7 +22,8 @@
         <activity android:name=".AdminListarUsuarios" />
         <activity android:name=".MensagensSalvas"
             android:windowSoftInputMode="adjustPan"/>
-        <activity android:name=".SalvarMensagem" />
+        <activity android:name=".EnviarMensagemSalva"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".EnviarMensagemDireto"
             android:windowSoftInputMode="adjustResize"/>
         <activity

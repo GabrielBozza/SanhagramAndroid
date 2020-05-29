@@ -1,7 +1,9 @@
 package com.example.aulalabprogiii;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -93,7 +95,8 @@ public class MensagensSalvas extends AppCompatActivity {
                     Bolha_direita.setShape(GradientDrawable.RECTANGLE);
                     Bolha_direita.setCornerRadii(new float[]{raio, raio, raio, raio, raio, raio, raio, raio});
 
-                    String texto = response.getJSONArray("MENSAGENS").getJSONObject(i).get("texto_mensagem").toString();
+                    final String idmensagem = response.getJSONArray("MENSAGENS").getJSONObject(i).get("idmensagem").toString();
+                    final String texto = response.getJSONArray("MENSAGENS").getJSONObject(i).get("texto_mensagem").toString();
                     String data_envio = response.getJSONArray("MENSAGENS").getJSONObject(i).get("data_envio").toString().substring(8,10)
                             +"/"+response.getJSONArray("MENSAGENS").getJSONObject(i).get("data_envio").toString().substring(5,7)
                             +"/"+response.getJSONArray("MENSAGENS").getJSONObject(i).get("data_envio").toString().substring(0,4);
@@ -120,7 +123,58 @@ public class MensagensSalvas extends AppCompatActivity {
                     Texto_Mensagem.setPadding(16,16,16,16);
                     Texto_Mensagem.setTextSize(15);
                     Texto_Mensagem.setWidth(750);
-                    Texto_Mensagem.setClickable(false);
+
+                    Texto_Mensagem.setOnClickListener(new View.OnClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
+                        @Override
+                        public void onClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MensagensSalvas.this);
+                            builder.setCancelable(true);
+                            builder.setTitle("Enviar Mensagem");
+                            builder.setMessage("Você deseja enviar esta mensagem à alguém?");
+                            builder.setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            EscolherDestinatarioMensagem(texto);
+                                        }
+                                    });
+                            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+                        }
+                    });
+
+                    Texto_Mensagem.setOnLongClickListener(new View.OnLongClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
+                        @Override
+                        public boolean onLongClick(View v) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MensagensSalvas.this);
+                            builder.setCancelable(true);
+                            builder.setTitle("Apagar Mensagem");
+                            builder.setMessage("Você deseja apagar a mensagem?");
+                            builder.setPositiveButton("Sim",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            ApagarMensagem(idmensagem);
+                                        }
+                                    });
+                            builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                }
+                            });
+
+                            AlertDialog dialog = builder.create();
+                            dialog.show();
+
+                            return true;
+                        }
+                    });
 
                     layout.addView(Texto_Mensagem);
                 }
@@ -147,6 +201,42 @@ public class MensagensSalvas extends AppCompatActivity {
             @Override
             public void run() {
                 mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+            }
+        });
+
+    }
+
+    public void ApagarMensagem(String a) {
+
+        final String idMensagem = a;
+
+        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
+                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+                + "&idmensagem=" + idMensagem;
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(MensagensSalvas.this, "Mensagem apagada!", Toast.LENGTH_SHORT).show();
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
+                intent.putExtra("MensagensConversa", json.toString());
+                intent.putExtra("Login", getIntent().getStringExtra("Login"));
+                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+                intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+
+                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -236,6 +326,18 @@ public class MensagensSalvas extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    public void EscolherDestinatarioMensagem(String a){
+
+        String texto_mensagem =a;
+
+        Intent intent = new Intent( this, EnviarMensagemSalva.class);
+        intent.putExtra("Login", getIntent().getStringExtra("Login"));
+        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        intent.putExtra("TextoMensagemSalva", texto_mensagem);
+        startActivity(intent);
 
     }
 
