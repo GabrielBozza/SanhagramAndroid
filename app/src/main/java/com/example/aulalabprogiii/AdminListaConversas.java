@@ -205,38 +205,6 @@ public class AdminListaConversas extends AppCompatActivity {
 
     }
 
-    public void CriarGrupo(View view) {
-
-        URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login");
-
-        client = new AsyncHttpClient();
-        client.get(URL, new JsonHttpResponseHandler() {
-
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-
-                json = response;
-
-                Intent intent = new Intent(getApplicationContext(), AdminCriarGrupo.class);
-                intent.putExtra("ListaUsuarios", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
-
-            }
-        });
-
-    }
-
     public void abrirTelaEnviarMensagemDireto(View view){
 
         Intent intent = new Intent( this, EnviarMensagemDireto.class);

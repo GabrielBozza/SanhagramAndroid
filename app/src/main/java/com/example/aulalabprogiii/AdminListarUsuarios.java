@@ -69,6 +69,14 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 params.gravity = Gravity.CENTER;
                 BotaoUsuario.setLayoutParams(params);
                 BotaoUsuario.setGravity(Gravity.CENTER);
+
+                BotaoUsuario.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        abrirTelaCadastroUsuario(v);
+                    }
+                });
+
                 layout.addView(BotaoUsuario);
 
                 BotaoUsuario = new Button(this);
