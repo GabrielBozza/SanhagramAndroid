@@ -58,14 +58,14 @@ public class AdminListarGrupos extends AppCompatActivity {
                 BotaoGrupo = new Button(this);
                 BotaoGrupo.setText("Criar Grupo");
                 BotaoGrupo.setTransformationMethod(null);
-                BotaoGrupo.setWidth(450);
+                BotaoGrupo.setWidth(750);
                 BotaoGrupo.setPadding(10, 16, 10, 16);
                 BotaoGrupo.setTextSize(16);
                 BotaoGrupo.setTextColor(getResources().getColor(R.color.white));
                 BotaoGrupo.setBackground(BotaoCadastro);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(16, 10, 16, 10);
+                params.setMargins(16, 32, 16, 10);
                 params.gravity = Gravity.CENTER;
                 BotaoGrupo.setLayoutParams(params);
                 BotaoGrupo.setGravity(Gravity.CENTER);
@@ -82,7 +82,7 @@ public class AdminListarGrupos extends AppCompatActivity {
                 BotaoGrupo = new Button(this);
                 BotaoGrupo.setText("Lista de Grupos");
                 BotaoGrupo.setTransformationMethod(null);
-                BotaoGrupo.setWidth(850);
+                BotaoGrupo.setWidth(950);
                 BotaoGrupo.setPadding(10, 10, 10, 10);
                 BotaoGrupo.setTextSize(23);
                 BotaoGrupo.setBackground(Titulo);
@@ -102,7 +102,7 @@ public class AdminListarGrupos extends AppCompatActivity {
                     BotaoGrupo = new Button(this);
                     BotaoGrupo.setText(nomeGrupo);
                     BotaoGrupo.setTransformationMethod(null);
-                    BotaoGrupo.setWidth(850);
+                    BotaoGrupo.setWidth(950);
                     BotaoGrupo.setPadding(10, 10, 10, 10);
                     BotaoGrupo.setTextSize(20);
                     BotaoGrupo.setBackground(Opcao_Conversa);

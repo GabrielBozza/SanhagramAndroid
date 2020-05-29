@@ -58,8 +58,8 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 BotaoUsuario = new Button(this);
                 BotaoUsuario.setText("Cadastrar Usuário");
                 BotaoUsuario.setTransformationMethod(null);
-                BotaoUsuario.setWidth(450);
-                BotaoUsuario.setPadding(10, 16, 10, 16);
+                BotaoUsuario.setWidth(750);
+                BotaoUsuario.setPadding(10, 32, 10, 16);
                 BotaoUsuario.setTextSize(16);
                 BotaoUsuario.setTextColor(getResources().getColor(R.color.white));
                 BotaoUsuario.setBackground(BotaoCadastro);
@@ -82,7 +82,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 BotaoUsuario = new Button(this);
                 BotaoUsuario.setText("Lista de Usuários");
                 BotaoUsuario.setTransformationMethod(null);
-                BotaoUsuario.setWidth(850);
+                BotaoUsuario.setWidth(950);
                 BotaoUsuario.setPadding(10, 10, 10, 10);
                 BotaoUsuario.setTextSize(23);
                 BotaoUsuario.setBackground(Titulo);
@@ -102,7 +102,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
                     BotaoUsuario = new Button(this);
                     BotaoUsuario.setText(nomeUsuario);
                     BotaoUsuario.setTransformationMethod(null);
-                    BotaoUsuario.setWidth(850);
+                    BotaoUsuario.setWidth(950);
                     BotaoUsuario.setPadding(10, 10, 10, 10);
                     BotaoUsuario.setTextSize(20);
                     BotaoUsuario.setBackground(Opcao_Conversa);

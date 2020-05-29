@@ -120,9 +120,9 @@ public class ChatUsuario extends AppCompatActivity {
                     params.setMargins(220,0,8,0);
                     NomeConversa.setLayoutParams(params);
 
-                    NomeConversa.setOnLongClickListener(new View.OnLongClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
+                    NomeConversa.setOnClickListener(new View.OnClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
                         @Override
-                        public boolean onLongClick(View v) {
+                        public void onClick(View v) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(ChatUsuario.this);
                             builder.setCancelable(true);
                             builder.setTitle("Sair do "+getIntent().getStringExtra("Destinatario"));
@@ -142,8 +142,6 @@ public class ChatUsuario extends AppCompatActivity {
 
                             AlertDialog dialog = builder.create();
                             dialog.show();
-
-                            return true;
                         }
                     });
 

@@ -80,7 +80,7 @@ public class ListaConversas extends AppCompatActivity {
                     Chat = new Button(this);
                     Chat.setText(amigo);
                     Chat.setTransformationMethod(null);
-                    Chat.setWidth(850);
+                    Chat.setWidth(950);
                     Chat.setPadding(10,10,10,10);
                     Chat.setTextSize(20);
                     Chat.setBackground(Opcao_Conversa);
