@@ -109,6 +109,8 @@ public class EnviarMensagemDireto extends AppCompatActivity {
         params.put("destinatario",destinatario);
         params.put("texto_mensagem",texto_mensagem);
 
+        Mensagem.setText("");//Limpa o campo da mensagem
+
         client = new AsyncHttpClient();
         client.post(URLenviar,params, new JsonHttpResponseHandler() {
 
