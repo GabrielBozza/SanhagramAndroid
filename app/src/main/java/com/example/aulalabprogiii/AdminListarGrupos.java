@@ -60,12 +60,12 @@ public class AdminListarGrupos extends AppCompatActivity {
                 BotaoGrupo.setTransformationMethod(null);
                 BotaoGrupo.setWidth(750);
                 BotaoGrupo.setPadding(10, 16, 10, 16);
-                BotaoGrupo.setTextSize(16);
+                BotaoGrupo.setTextSize(18);
                 BotaoGrupo.setTextColor(getResources().getColor(R.color.white));
                 BotaoGrupo.setBackground(BotaoCadastro);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(16, 32, 16, 10);
+                params.setMargins(16, 32, 16, 16);
                 params.gravity = Gravity.CENTER;
                 BotaoGrupo.setLayoutParams(params);
                 BotaoGrupo.setGravity(Gravity.CENTER);

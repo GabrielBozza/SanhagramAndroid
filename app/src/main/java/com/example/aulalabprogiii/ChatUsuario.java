@@ -31,6 +31,7 @@ import org.json.JSONObject;
 
 import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 import cz.msebera.android.httpclient.Header;
@@ -170,7 +171,7 @@ public class ChatUsuario extends AppCompatActivity {
                     String remetente = response.getJSONArray("MENSAGENS").getJSONObject(i).get("remetente").toString();
                     final String idmensagem = response.getJSONArray("MENSAGENS").getJSONObject(i).get("idmensagem").toString();
                     String destinatario = response.getJSONArray("MENSAGENS").getJSONObject(i).get("destinatario").toString();
-                    String texto = response.getJSONArray("MENSAGENS").getJSONObject(i).get("texto_mensagem").toString();
+                    String texto = response.getJSONArray("MENSAGENS").getJSONObject(i).getString("texto_mensagem");
                     String hora_envio = response.getJSONArray("MENSAGENS").getJSONObject(i).get("data_envio").toString().substring(11,16);
                     String bolha_mensagem_esquerda = " "+hora_envio+"\n "+remetente+"\n "+texto;
                     String bolha_mensagem_direita = hora_envio+" \n "+texto+" ";

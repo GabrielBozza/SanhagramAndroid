@@ -59,13 +59,13 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 BotaoUsuario.setText("Cadastrar Usuário");
                 BotaoUsuario.setTransformationMethod(null);
                 BotaoUsuario.setWidth(750);
-                BotaoUsuario.setPadding(10, 32, 10, 16);
-                BotaoUsuario.setTextSize(16);
+                BotaoUsuario.setPadding(10, 16, 10, 16);
+                BotaoUsuario.setTextSize(18);
                 BotaoUsuario.setTextColor(getResources().getColor(R.color.white));
                 BotaoUsuario.setBackground(BotaoCadastro);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                params.setMargins(16, 10, 16, 10);
+                params.setMargins(16, 32, 16, 16);
                 params.gravity = Gravity.CENTER;
                 BotaoUsuario.setLayoutParams(params);
                 BotaoUsuario.setGravity(Gravity.CENTER);
