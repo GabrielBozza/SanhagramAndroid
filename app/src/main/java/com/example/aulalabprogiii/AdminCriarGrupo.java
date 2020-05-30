@@ -80,21 +80,14 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
                 for(int i=0;i<response.getJSONArray("USUARIOS").length();i++) {
 
-                    GradientDrawable Bolha_direita = new GradientDrawable();
-                    Bolha_direita.setColor(getResources().getColor(R.color.colorBolhaDireita));
-                    Bolha_direita.setShape(GradientDrawable.RECTANGLE);
-                    Bolha_direita.setCornerRadii(new float[]{raio, raio, raio, raio, raio, raio, raio, raio});
-
                     String nomeUsuario = response.getJSONArray("USUARIOS").getJSONObject(i).get("nome").toString();
 
                     LinearLayout layout = (LinearLayout) findViewById(R.id.UsuariosNovoGrupo);
 
                     cb = new CheckBox(getApplicationContext());
                     cb.setText(nomeUsuario);
-
                     cb.setTextSize(20);
                     cb.setPadding(16,16,10,16);
-
                     layout.addView(cb);
                     usuariosGrupoCheck.add(cb);
                     }

@@ -20,8 +20,8 @@
             android:layout_height="335dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:background="@drawable/card_login"
             app:cardElevation="7dp"
             app:cardCornerRadius="12dp">
@@ -43,8 +43,8 @@
             android:layout_height="335dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
             android:background="@drawable/card_login"
             app:cardElevation="7dp"
             app:cardCornerRadius="12dp">

@@ -29,29 +29,45 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@id/chatScrollView" />
+            app:layout_constraintBottom_toTopOf="@id/CardSelecaoUsuarios" >
 
-        <ScrollView
-            android:id="@+id/chatScrollView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Conversa"
+        </LinearLayout>
 
-            android:transcriptMode="alwaysScroll">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/CardSelecaoUsuarios"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="80dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardElevation="7dp"
+            app:cardCornerRadius="12dp"
+            >
 
-            <LinearLayout
-                android:id="@+id/UsuariosNovoGrupo"
-                android:layout_width="378dp"
-                android:layout_height="660dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginEnd="16dp"
-                android:background="@color/Conversa"
-                android:orientation="vertical"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-        </ScrollView>
+            <ScrollView
+                android:id="@+id/chatScrollView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="32dp"
+                android:transcriptMode="alwaysScroll">
+
+                <LinearLayout
+                    android:id="@+id/UsuariosNovoGrupo"
+                    android:layout_width="378dp"
+                    android:layout_height="660dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
+
     </LinearLayout>
 
     <androidx.cardview.widget.CardView

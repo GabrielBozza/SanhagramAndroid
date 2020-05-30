@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.AbsoluteSizeSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -52,8 +56,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
             //BotaoGrupo.setWidth(300);
             BotaoGrupo.setClickable(false);
             BotaoGrupo.setPadding(10, 16, 10, 16);
-            BotaoGrupo.setTextSize(18);
-            //BotaoGrupo.setTextColor(getResources().getColor(R.color.white));
+            BotaoGrupo.setTextSize(23);
             BotaoGrupo.setBackground(TituloUsuariosGrupo);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -68,11 +71,9 @@ public class AdminAlterarGrupo extends AppCompatActivity {
             BotaoGrupo = new Button(this);
             BotaoGrupo.setText("Usuários fora do Grupo");
             BotaoGrupo.setTransformationMethod(null);
-            //BotaoGrupo.setWidth(300);
-            BotaoGrupo.setTextSize(18);
+            BotaoGrupo.setTextSize(23);
             BotaoGrupo.setClickable(false);
             BotaoGrupo.setPadding(10, 16, 10, 16);
-            //BotaoGrupo.setTextColor(getResources().getColor(R.color.white));
             BotaoGrupo.setBackground(TituloUsuariosGrupo);
             params.setMargins(16, 10, 16, 10);
             params.gravity = Gravity.CENTER;
@@ -86,20 +87,24 @@ public class AdminAlterarGrupo extends AppCompatActivity {
                 for (int i = 0; i < response.getJSONArray("USUARIOSDOGRUPO").length(); i++) {
 
                     GradientDrawable Opcao_Conversa = new GradientDrawable();
-                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa));
+                    Opcao_Conversa.setColor(getResources().getColor(R.color.colorVermelhoClaro));
                     Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
                     Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
                     final String nomeUsuarioGrupo = response.getJSONArray("USUARIOSDOGRUPO").get(i).toString();
 
+                    SpannableString UsuGrupo= new SpannableString(" - "+nomeUsuarioGrupo);
+                    UsuGrupo.setSpan(new AbsoluteSizeSpan(27, true), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    UsuGrupo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorVermelho)), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                     BotaoGrupo = new Button(this);
-                    BotaoGrupo.setText(" - "+nomeUsuarioGrupo);
+                    BotaoGrupo.setText(UsuGrupo);
                     BotaoGrupo.setTransformationMethod(null);
-                    BotaoGrupo.setWidth(450);
+                    BotaoGrupo.setWidth(650);
                     BotaoGrupo.setPadding(10, 10, 10, 10);
-                    BotaoGrupo.setTextSize(18);
+                    BotaoGrupo.setTextSize(20);
                     BotaoGrupo.setBackground(Opcao_Conversa);
-                    BotaoGrupo.setGravity(Gravity.CENTER);
+                    BotaoGrupo.setGravity(Gravity.START);
                     params.setMargins(16, 10, 16, 10);
                     params.gravity = Gravity.CENTER;
                     BotaoGrupo.setLayoutParams(params);
@@ -117,20 +122,24 @@ public class AdminAlterarGrupo extends AppCompatActivity {
                 for (int i = 0; i < response.getJSONArray("USUARIOSFORADOGRUPO").length(); i++) {
 
                     GradientDrawable Opcao_Conversa = new GradientDrawable();
-                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa));
+                    Opcao_Conversa.setColor(getResources().getColor(R.color.colorAzulClaro));
                     Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
                     Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
                     final String nomeUsuarioForaGrupo = response.getJSONArray("USUARIOSFORADOGRUPO").get(i).toString();
 
+                    SpannableString UsuForaGrupo= new SpannableString(" + "+nomeUsuarioForaGrupo);
+                    UsuForaGrupo.setSpan(new AbsoluteSizeSpan(27, true), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    UsuForaGrupo.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.colorBolhaEsquerda)), 0, 3, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
                     BotaoGrupo = new Button(this);
-                    BotaoGrupo.setText( " + "+nomeUsuarioForaGrupo);
+                    BotaoGrupo.setText( UsuForaGrupo);
                     BotaoGrupo.setTransformationMethod(null);
-                    BotaoGrupo.setWidth(450);
+                    BotaoGrupo.setWidth(650);
                     BotaoGrupo.setPadding(10, 10, 10, 10);
-                    BotaoGrupo.setTextSize(18);
+                    BotaoGrupo.setTextSize(20);
                     BotaoGrupo.setBackground(Opcao_Conversa);
-                    BotaoGrupo.setGravity(Gravity.CENTER);
+                    BotaoGrupo.setGravity(Gravity.START);
                     params.setMargins(16, 10, 16, 10);
                     params.gravity = Gravity.CENTER;
                     BotaoGrupo.setLayoutParams(params);

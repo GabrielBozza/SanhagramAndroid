@@ -29,13 +29,9 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UTFDataFormatException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.protocol.HTTP;
 
 public class ChatUsuario extends AppCompatActivity {
 
@@ -67,7 +63,6 @@ public class ChatUsuario extends AppCompatActivity {
         Botao_Enviar.setShape(GradientDrawable.RECTANGLE);
         Botao_Enviar.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
         BotaoEnviar.setBackground(Botao_Enviar);
-
 
         try {
 

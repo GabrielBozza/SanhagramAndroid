@@ -1,7 +1,6 @@
 package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.drawable.IconCompat;
 
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
@@ -76,15 +75,14 @@ public class ListaConversas extends AppCompatActivity {
                     Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
                     final String amigo = response.getJSONArray("CONVERSAS").get(i).toString();
-                    //LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
                     Chat = new Button(this);
                     Chat.setText(amigo);
                     Chat.setTransformationMethod(null);
                     Chat.setWidth(950);
-                    Chat.setPadding(10,10,10,10);
-                    Chat.setTextSize(20);
+                    Chat.setPadding(24,12,16,12);
+                    Chat.setTextSize(21);
                     Chat.setBackground(Opcao_Conversa);
-                    Chat.setGravity(Gravity.LEFT);
+                    Chat.setGravity(Gravity.START);
 
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                             LinearLayout.LayoutParams.WRAP_CONTENT);

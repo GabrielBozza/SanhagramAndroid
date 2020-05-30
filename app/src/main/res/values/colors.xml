@@ -3,6 +3,9 @@
     <color name="colorPrimary">#43e6c5</color>
     <color name="colorPrimaryDark">#03947c</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="colorAzulClaro">#99e7ff</color>
+    <color name="colorVermelhoClaro">#ffbfba</color>
+    <color name="colorVermelho">#ff574a</color>
     <color name="colorBolhaEsquerda">#4287f5</color>
     <color name="colorBolhaDireita">#1ED985</color>
     <color name="colorBolha_AvisoGrupo">#FA93C0</color>
