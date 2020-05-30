@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,11 +80,17 @@ public class ChatUsuario extends AppCompatActivity {
                 NomeConversa = new Button(this);
                 NomeConversa.setText(getIntent().getStringExtra("Destinatario"));
                 NomeConversa.setTransformationMethod(null);
-                NomeConversa.setWidth(550);
-                NomeConversa.setPadding(44,16,10,16);
+                NomeConversa.setWidth(800);
+                NomeConversa.setPadding(32,16,10,16);
                 NomeConversa.setTextSize(22);
                 NomeConversa.setBackground(CabecalhoChat);
-                NomeConversa.setGravity(Gravity.LEFT);
+                NomeConversa.setGravity(Gravity.START);
+                LinearLayout.LayoutParams paramss = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+                //paramss.weight=5;
+                //paramss.gravity=Gravity.START;
+                paramss.setMargins(16,0,16,0);
+                NomeConversa.setLayoutParams(paramss);
 
                 NomeConversa.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -99,22 +106,23 @@ public class ChatUsuario extends AppCompatActivity {
                     GradientDrawable Botao_SairGrupo = new GradientDrawable();
                     Botao_SairGrupo.setColor(getResources().getColor(R.color.colorBotaoSairGrupo));
                     Botao_SairGrupo.setShape(GradientDrawable.RECTANGLE);
-                    Botao_SairGrupo.setCornerRadii(new float[]{45, 45, 25, 25, 45, 45, 25, 25});
+                    Botao_SairGrupo.setCornerRadii(new float[]{35, 35, 35, 35, 35, 35, 35, 35});
 
                     NomeConversa = new Button(this);
-                    NomeConversa.setText("Sair do grupo");
+                    NomeConversa.setText("Sair");
                     NomeConversa.setTransformationMethod(null);
-                    NomeConversa.setWidth(300);
+                    NomeConversa.setWidth(70);
                     NomeConversa.setTextColor(getResources().getColor(R.color.white));
-                    NomeConversa.setPadding(16,10,10,16);
-                    NomeConversa.setTextSize(14);
+                    NomeConversa.setPadding(8,8,8,8);
+                    NomeConversa.setTextSize(15);
                     NomeConversa.setBackground(Botao_SairGrupo);
                     NomeConversa.setGravity(Gravity.CENTER);
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT);
-                    params.gravity=Gravity.RIGHT;
-                    params.setMargins(220,0,8,0);
-                    NomeConversa.setLayoutParams(params);
+                    //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                    //        LinearLayout.LayoutParams.WRAP_CONTENT);
+                    //paramss.weight=1;
+                    //paramss.gravity=Gravity.END;
+                    paramss.setMargins(16,0,32,2);
+                    NomeConversa.setLayoutParams(paramss);
 
                     NomeConversa.setOnClickListener(new View.OnClickListener() {//ABRE ALERTA PARA PERGUNTAR SE A ACAO EH DESEJAVEL
                         @Override
@@ -141,6 +149,8 @@ public class ChatUsuario extends AppCompatActivity {
                         }
                     });
 
+                    Space sp =new Space(this);
+                    layoutCabecalho.addView(sp);
                     layoutCabecalho.addView(NomeConversa);
 
                 }

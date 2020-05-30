@@ -1,7 +1,9 @@
 package com.example.aulalabprogiii;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -174,5 +176,34 @@ public class AdminAlterarUsuario extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void ConfirmacaoExcluir(final View view){
+
+        String nomeUsuarioExcluir = nomeUsu.getText().toString();
+
+        if(nomeUsuarioExcluir.equals("admin")){ //NÃO PODE DELETAR O ADMIN - SUICÍDIO
+            Toast.makeText(AdminAlterarUsuario.this, "Não se mate!!!! Não deixo!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminAlterarUsuario.this);
+        builder.setCancelable(true);
+        builder.setTitle("Excluir Usuário");
+        builder.setMessage("Você deseja excluir o usuário?");
+        builder.setPositiveButton("Sim",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ExcluirUsuario(view);
+                    }
+                });
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

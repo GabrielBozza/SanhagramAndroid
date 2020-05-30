@@ -98,6 +98,12 @@ public class AdminListaConversas extends AppCompatActivity {
 
                     layout.addView(Chat);
                 }
+
+                Chat = new Button(this);
+                Chat.setText("\n\n\n");
+                Chat.setBackground(Titulo);
+                layout.addView(Chat);//ADICIONA ESPACO VAZIO APOS A UTLIMA MENSAGEM
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
