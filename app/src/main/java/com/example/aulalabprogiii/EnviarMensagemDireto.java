@@ -130,7 +130,7 @@ public class EnviarMensagemDireto extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(EnviarMensagemDireto.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(EnviarMensagemDireto.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_SHORT).show();
                 return;
 
             }

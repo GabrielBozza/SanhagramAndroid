@@ -49,6 +49,11 @@ public class TelaLogin extends AppCompatActivity {
                 nome = NomeUsuario.getText().toString();
                 senha = Senha.getText().toString();
 
+                if (nome.matches("")||senha.matches("")) {
+                    Toast.makeText(TelaLogin.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 params = new RequestParams();
                 params.put("nome",nome);
                 params.put("senha",senha);
@@ -80,7 +85,7 @@ public class TelaLogin extends AppCompatActivity {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
                         super.onFailure(statusCode,headers,responseString,throwable);
-                        Toast.makeText(TelaLogin.this,"Erro-Login e/ou senha incorretos!",Toast.LENGTH_LONG).show();
+                        Toast.makeText(TelaLogin.this,"Erro-Login e/ou senha incorretos!",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
@@ -95,7 +100,7 @@ public class TelaLogin extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Toast.makeText(TelaLogin.this,"Você não está logado!",Toast.LENGTH_LONG).show();
+        Toast.makeText(TelaLogin.this,"Você não está logado!",Toast.LENGTH_SHORT).show();
     }
 
 }

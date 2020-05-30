@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void abrirTelaLogin(View view){
+        String prefixoURL = PrefixoURL.getText().toString();
+
+        if (prefixoURL.matches("")) {
+            Toast.makeText(MainActivity.this, "Preencha o Prefixo da URL!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String URL = "http://"+PrefixoURL.getText().toString();
         Intent intent = new Intent( this, TelaLogin.class);
         intent.putExtra("PrefixoURL",URL);

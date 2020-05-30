@@ -113,7 +113,7 @@ public class EnviarMensagemSalva extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(EnviarMensagemSalva.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(EnviarMensagemSalva.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_LONG).show();
                 return;
 
             }

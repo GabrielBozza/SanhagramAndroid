@@ -175,7 +175,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(AdminCriarGrupo.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminCriarGrupo.this, "Erro - Um grupo com o nome escolhido já existe, escolha outro nome!", Toast.LENGTH_SHORT).show();
                 return;
 
             }

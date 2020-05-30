@@ -84,7 +84,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(AdminCadastrarUsuario.this, "Erro! Usuário já está cadastrado!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminCadastrarUsuario.this, "Erro! Usuário já está cadastrado!", Toast.LENGTH_SHORT).show();
                 return;
 
             }

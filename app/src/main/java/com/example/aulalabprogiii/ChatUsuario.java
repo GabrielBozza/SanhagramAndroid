@@ -161,17 +161,17 @@ public class ChatUsuario extends AppCompatActivity {
                     GradientDrawable Bolha_esquerda = new GradientDrawable();
                     Bolha_esquerda.setColor(getResources().getColor(R.color.colorBolhaEsquerda));
                     Bolha_esquerda.setShape(GradientDrawable.RECTANGLE);
-                    Bolha_esquerda.setCornerRadii(new float[]{5, 5, raio, raio, raio, raio, raio, raio});
+                    Bolha_esquerda.setCornerRadii(new float[]{raio, raio, raio, raio, raio, raio, 5, 5});
 
                     GradientDrawable Bolha_AvisoGrupo = new GradientDrawable();
                     Bolha_AvisoGrupo.setColor(getResources().getColor(R.color.colorBolha_AvisoGrupo));
                     Bolha_AvisoGrupo.setShape(GradientDrawable.RECTANGLE);
-                    Bolha_AvisoGrupo.setCornerRadii(new float[]{5, 5, raio, raio, raio, raio, raio, raio});
+                    Bolha_AvisoGrupo.setCornerRadii(new float[]{raio, raio, raio, raio, raio, raio, 5, 5});
 
                     GradientDrawable Bolha_direita = new GradientDrawable();
                     Bolha_direita.setColor(getResources().getColor(R.color.colorBolhaDireita));
                     Bolha_direita.setShape(GradientDrawable.RECTANGLE);
-                    Bolha_direita.setCornerRadii(new float[]{raio, raio, 5, 5, raio, raio, raio, raio});
+                    Bolha_direita.setCornerRadii(new float[]{raio, raio, raio, raio, 5, 5, raio, raio});
 
                     String remetente = response.getJSONArray("MENSAGENS").getJSONObject(i).get("remetente").toString();
                     final String idmensagem = response.getJSONArray("MENSAGENS").getJSONObject(i).get("idmensagem").toString();
@@ -324,7 +324,7 @@ public class ChatUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -370,7 +370,7 @@ public class ChatUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
 
-                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatUsuario.this, "Erro - Usuário removido do sistema!", Toast.LENGTH_SHORT).show();
                 return;
 
             }
