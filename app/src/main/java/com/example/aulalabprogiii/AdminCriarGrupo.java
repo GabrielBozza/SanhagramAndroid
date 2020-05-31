@@ -1,16 +1,10 @@
 package com.example.aulalabprogiii;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -18,7 +12,6 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -35,10 +28,10 @@ import cz.msebera.android.httpclient.Header;
 
 public class AdminCriarGrupo extends AppCompatActivity {
 
-    List<CheckBox> usuariosGrupoCheck = new ArrayList<CheckBox>();
+    List<CheckBox> usuariosGrupoCheck = new ArrayList<>();
     String usuariosGrupoString="";
     EditText nomeNovoGrupo;
-    Button NomeConversa;
+    Button NomeConversa, BotaoCriar;
     CheckBox cb;
 
     RequestParams params;
@@ -50,7 +43,8 @@ public class AdminCriarGrupo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_criar_grupo);
 
-        nomeNovoGrupo = (EditText)findViewById(R.id.NomeNovoGrupo);
+        nomeNovoGrupo = findViewById(R.id.NomeNovoGrupo);
+        BotaoCriar = findViewById(R.id.BotaoEnviar);
         String resultado = getIntent().getStringExtra("ListaUsuarios");
 
         try {
@@ -65,7 +59,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
                 CabecalhoChat.setShape(GradientDrawable.RECTANGLE);
                 CabecalhoChat.setCornerRadii(new float[]{raio, raio, raio, raio, raio, raio, raio, raio});
 
-                LinearLayout layoutCabecalho = (LinearLayout) findViewById(R.id.Cabecalho);
+                LinearLayout layoutCabecalho = findViewById(R.id.Cabecalho);
                 NomeConversa = new Button(this);
                 NomeConversa.setText("Criar Grupo");
                 NomeConversa.setTransformationMethod(null);
@@ -73,7 +67,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
                 NomeConversa.setPadding(44,16,10,16);
                 NomeConversa.setTextSize(22);
                 NomeConversa.setBackground(CabecalhoChat);
-                NomeConversa.setGravity(Gravity.LEFT);
+                NomeConversa.setGravity(Gravity.START);
                 NomeConversa.setClickable(false);
 
                 layoutCabecalho.addView(NomeConversa);
@@ -82,7 +76,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
                     String nomeUsuario = response.getJSONArray("USUARIOS").getJSONObject(i).get("nome").toString();
 
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.UsuariosNovoGrupo);
+                    LinearLayout layout = findViewById(R.id.UsuariosNovoGrupo);
 
                     cb = new CheckBox(getApplicationContext());
                     cb.setText(nomeUsuario);
@@ -113,7 +107,6 @@ public class AdminCriarGrupo extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-
                 json = response;
 
                 Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
@@ -148,6 +141,8 @@ public class AdminCriarGrupo extends AppCompatActivity {
             return;
         }
 
+        BotaoCriar.setClickable(false);
+
         String URLCriarGrupo = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=criarGrupo&dispositivo=android";
 
         params = new RequestParams();
@@ -161,6 +156,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+
                 Toast.makeText(AdminCriarGrupo.this, "Grupo criado com sucesso!", Toast.LENGTH_SHORT).show();
                 json = response;
 
@@ -174,10 +170,8 @@ public class AdminCriarGrupo extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoCriar.setClickable(true);
                 Toast.makeText(AdminCriarGrupo.this, "Erro - Um grupo com o nome escolhido já existe, escolha outro nome!", Toast.LENGTH_SHORT).show();
-                return;
-
             }
         });
 

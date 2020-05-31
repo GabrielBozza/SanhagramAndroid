@@ -44,9 +44,9 @@ public class EnviarMensagemDireto extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_mensagem_direto);
 
-        Mensagem = (EditText)findViewById(R.id.MensagemDireta);
-        Destinatario = (EditText)findViewById(R.id.NomeDestinatario);
-        BotaoEnviar = (Button)findViewById(R.id.BotaoEnviar_Direto);
+        Mensagem = findViewById(R.id.MensagemDireta);
+        Destinatario = findViewById(R.id.NomeDestinatario);
+        BotaoEnviar = findViewById(R.id.BotaoEnviar_Direto);
 
     }
 
@@ -92,7 +92,7 @@ public class EnviarMensagemDireto extends AppCompatActivity {
 
     }
 
-    public void EnviarMensagemDireto(View view) throws UnsupportedEncodingException {
+    public void EnviarMensagem_Direto(View view) throws UnsupportedEncodingException {
 
         String texto_mensagem = Mensagem.getText().toString();
         String destinatario = Destinatario.getText().toString();
@@ -110,6 +110,7 @@ public class EnviarMensagemDireto extends AppCompatActivity {
         params.put("texto_mensagem",texto_mensagem);
 
         Mensagem.setText("");//Limpa o campo da mensagem
+        BotaoEnviar.setClickable(false);
 
         client = new AsyncHttpClient();
         client.post(URLenviar,params, new JsonHttpResponseHandler() {
@@ -131,9 +132,8 @@ public class EnviarMensagemDireto extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoEnviar.setClickable(true);
                 Toast.makeText(EnviarMensagemDireto.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_SHORT).show();
-                return;
 
             }
         });

@@ -33,9 +33,9 @@ public class EnviarMensagemSalva extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enviar_mensagem_salva);
 
-        Mensagem = (EditText)findViewById(R.id.MensagemSalva);
-        Destinatario = (EditText)findViewById(R.id.NomeDestinatario);
-        BotaoEnviar = (Button)findViewById(R.id.BotaoEnviarMensagemSalva);
+        Mensagem = findViewById(R.id.MensagemSalva);
+        Destinatario = findViewById(R.id.NomeDestinatario);
+        BotaoEnviar = findViewById(R.id.BotaoEnviarMensagemSalva);
 
         Mensagem.setText(getIntent().getStringExtra("TextoMensagemSalva"));
     }
@@ -93,6 +93,7 @@ public class EnviarMensagemSalva extends AppCompatActivity {
         params.put("texto_mensagem",texto_mensagem);
 
         Mensagem.setText("");//Limpa o campo da mensagem
+        BotaoEnviar.setClickable(false);
 
         client = new AsyncHttpClient();
         client.post(URLenviar,params, new JsonHttpResponseHandler() {
@@ -114,10 +115,8 @@ public class EnviarMensagemSalva extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoEnviar.setClickable(true);
                 Toast.makeText(EnviarMensagemSalva.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_LONG).show();
-                return;
-
             }
         });
 

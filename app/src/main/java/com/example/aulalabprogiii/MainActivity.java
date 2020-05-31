@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        String URL = "http://"+PrefixoURL.getText().toString();
+        String URL = PrefixoURL.getText().toString();
         Intent intent = new Intent( this, TelaLogin.class);
         intent.putExtra("PrefixoURL",URL);
         startActivity(intent);

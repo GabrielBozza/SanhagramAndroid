@@ -46,6 +46,7 @@ public class TelaLogin extends AppCompatActivity {
 
             @Override
             public void onClick(View v){
+
                 nome = NomeUsuario.getText().toString();
                 senha = Senha.getText().toString();
 
@@ -53,6 +54,8 @@ public class TelaLogin extends AppCompatActivity {
                     Toast.makeText(TelaLogin.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+
+                Login.setClickable(false);//BLOQUEIA O BOTAO E SOH O HABILITA NOVAMENTE SE OCORRER ALGUM ERRO
 
                 params = new RequestParams();
                 params.put("nome",nome);
@@ -64,6 +67,7 @@ public class TelaLogin extends AppCompatActivity {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, JSONObject response){
                         super.onSuccess(statusCode, headers,response);
+
                         json = response;
 
                         if(nome.equals("admin")) {
@@ -85,6 +89,7 @@ public class TelaLogin extends AppCompatActivity {
                     @Override
                     public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable){
                         super.onFailure(statusCode,headers,responseString,throwable);
+                        Login.setClickable(true);
                         Toast.makeText(TelaLogin.this,"Erro-Login e/ou senha incorretos!",Toast.LENGTH_SHORT).show();
                     }
 

@@ -28,7 +28,7 @@ public class AdminListaConversas extends AppCompatActivity {
     AsyncHttpClient client;
     JSONObject json;
 
-    Button Chat;
+    Button Chat,Botaousu,Botaogrupos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +36,8 @@ public class AdminListaConversas extends AppCompatActivity {
         setContentView(R.layout.activity_admin_lista_conversas);
 
         String resultado = getIntent().getStringExtra("ListaConversas");
+        Botaousu = findViewById(R.id.BotaoUsuarios);
+        Botaogrupos = findViewById(R.id.BotaoGrupos);
         final String login = getIntent().getStringExtra("Login");
 
         try {
@@ -47,7 +49,7 @@ public class AdminListaConversas extends AppCompatActivity {
             Titulo.setShape(GradientDrawable.RECTANGLE);
             Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-            LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
+            final LinearLayout layout = findViewById(R.id.Listaconversas);
             Chat = new Button(this);
             Chat.setText("Conversas Admin");
             Chat.setTransformationMethod(null);
@@ -59,6 +61,13 @@ public class AdminListaConversas extends AppCompatActivity {
             Chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Botaousu.setClickable(false);
+                    Botaogrupos.setClickable(false);
+                    for(int i=0;i<layout.getChildCount();i++){
+                        View child=layout.getChildAt(i);
+                        child.setClickable(false);
+                        child.setFocusableInTouchMode(false);
+                    }
                     Refresh(v);
                 }
             });
@@ -92,6 +101,13 @@ public class AdminListaConversas extends AppCompatActivity {
                     Chat.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            Botaousu.setClickable(false);
+                            Botaogrupos.setClickable(false);
+                            for(int i=0;i<layout.getChildCount();i++){
+                                View child=layout.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
                             VerChat(login, amigo);
                         }
                     });
@@ -144,15 +160,15 @@ public class AdminListaConversas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
     public void ListarUsuarios(View view) {
+        Botaousu.setClickable(false);
+        Botaogrupos.setClickable(false);
 
         URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
                 + "&login=" + getIntent().getStringExtra("Login");
@@ -176,7 +192,8 @@ public class AdminListaConversas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                Botaousu.setClickable(true);
+                Botaogrupos.setClickable(true);
                 Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }
@@ -185,6 +202,9 @@ public class AdminListaConversas extends AppCompatActivity {
     }
 
     public void ListarGrupos(View view) {
+
+        Botaousu.setClickable(false);
+        Botaogrupos.setClickable(false);
 
         URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
                 + "&login=" + getIntent().getStringExtra("Login");
@@ -208,7 +228,8 @@ public class AdminListaConversas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                Botaousu.setClickable(true);
+                Botaogrupos.setClickable(true);
                 Toast.makeText(AdminListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }

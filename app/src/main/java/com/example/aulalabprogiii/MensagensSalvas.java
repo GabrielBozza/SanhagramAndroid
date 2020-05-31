@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.AbsoluteSizeSpan;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -49,12 +48,11 @@ public class MensagensSalvas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mensagens_salvas);
 
-        Mensagem = (EditText)findViewById(R.id.Mensagem);
-        BotaoSalvar = (Button)findViewById(R.id.BotaoSalvar);
-        mScrollView = (ScrollView)findViewById(R.id.chatScrollView);
+        Mensagem = findViewById(R.id.Mensagem);
+        BotaoSalvar = findViewById(R.id.BotaoSalvar);
+        mScrollView = findViewById(R.id.chatScrollView);
 
         String resultado = getIntent().getStringExtra("MensagensConversa");
-        String login = getIntent().getStringExtra("Login");
 
         GradientDrawable Botao_Enviar = new GradientDrawable();
         Botao_Enviar.setColor(getResources().getColor(R.color.colorAccent));
@@ -82,7 +80,7 @@ public class MensagensSalvas extends AppCompatActivity {
                 NomeConversa.setPadding(44,16,10,16);
                 NomeConversa.setTextSize(22);
                 NomeConversa.setBackground(CabecalhoChat);
-                NomeConversa.setGravity(Gravity.LEFT);
+                NomeConversa.setGravity(Gravity.START);
                 NomeConversa.setClickable(false);
                 layoutCabecalho.addView(NomeConversa);
 
@@ -106,7 +104,7 @@ public class MensagensSalvas extends AppCompatActivity {
                     SpannableString stringBolhaMsgmDireita = new SpannableString(mensagem_salva);
                     stringBolhaMsgmDireita.setSpan(new AbsoluteSizeSpan(12, true), 0, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.ListaMensagensSalvas);
+                    LinearLayout layout = findViewById(R.id.ListaMensagensSalvas);
                     Texto_Mensagem = new Button(this);
 
                     Texto_Mensagem.setTransformationMethod(null);
@@ -183,7 +181,7 @@ public class MensagensSalvas extends AppCompatActivity {
                 Espaco_vazio.setColor(getResources().getColor(R.color.transparent));
                 Espaco_vazio.setShape(GradientDrawable.RECTANGLE);
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.ListaMensagensSalvas);
+                LinearLayout layout = findViewById(R.id.ListaMensagensSalvas);
                 Texto_Mensagem = new Button(this);
                 Texto_Mensagem.setText("\n\n\n");
                 Texto_Mensagem.setBackground(Espaco_vazio);
@@ -234,7 +232,6 @@ public class MensagensSalvas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }
@@ -301,6 +298,7 @@ public class MensagensSalvas extends AppCompatActivity {
         params.put("texto_mensagem",texto_mensagem);
 
         Mensagem.setText("");//Limpa o campo da mensagem
+        BotaoSalvar.setClickable(false);
 
         client = new AsyncHttpClient();
         client.post(URLenviar,params, new JsonHttpResponseHandler() {
@@ -322,10 +320,8 @@ public class MensagensSalvas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoSalvar.setClickable(true);
                 Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
-                return;
-
             }
         });
 

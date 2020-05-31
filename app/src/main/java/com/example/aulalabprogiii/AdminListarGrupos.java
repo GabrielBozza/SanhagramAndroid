@@ -36,7 +36,6 @@ public class AdminListarGrupos extends AppCompatActivity {
         setContentView(R.layout.activity_admin_listar_grupos);
 
         String resultado = getIntent().getStringExtra("ListaGrupos");
-        final String login = getIntent().getStringExtra("Login");
 
         try {
 
@@ -53,7 +52,7 @@ public class AdminListarGrupos extends AppCompatActivity {
                 Titulo.setShape(GradientDrawable.RECTANGLE);
                 Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.ListaGruposLinearLayout);
+                final LinearLayout layout = findViewById(R.id.ListaGruposLinearLayout);
 
                 BotaoGrupo = new Button(this);
                 BotaoGrupo.setText("Criar Grupo");
@@ -73,6 +72,11 @@ public class AdminListarGrupos extends AppCompatActivity {
                 BotaoGrupo.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        for(int i=0;i<layout.getChildCount();i++){
+                            View child=layout.getChildAt(i);
+                            child.setClickable(false);
+                            child.setFocusableInTouchMode(false);
+                        }
                         CriarGrupo(v);
                     }
                 });
@@ -117,6 +121,11 @@ public class AdminListarGrupos extends AppCompatActivity {
                     BotaoGrupo.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            for(int i=0;i<layout.getChildCount();i++){
+                                View child=layout.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
                             VerUsuariosGrupo(nomeGrupo);
                         }
                     });
@@ -231,7 +240,6 @@ public class AdminListarGrupos extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }

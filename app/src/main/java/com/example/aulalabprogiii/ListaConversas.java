@@ -28,7 +28,7 @@ public class ListaConversas extends AppCompatActivity {
     AsyncHttpClient client;
     JSONObject json;
 
-    Button Chat;
+    Button Chat,BotaoSalvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,8 @@ public class ListaConversas extends AppCompatActivity {
 
         String resultado = getIntent().getStringExtra("ListaConversas");
         final String login = getIntent().getStringExtra("Login");
+
+        BotaoSalvas = findViewById(R.id.BotaoMensagensSalvas);
 
         try {
 
@@ -48,7 +50,7 @@ public class ListaConversas extends AppCompatActivity {
                 Titulo.setShape(GradientDrawable.RECTANGLE);
                 Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.Listaconversas);
+                final LinearLayout layout = findViewById(R.id.Listaconversas);
                 Chat = new Button(this);
                 Chat.setText("Conversas");
                 Chat.setTransformationMethod(null);
@@ -61,6 +63,12 @@ public class ListaConversas extends AppCompatActivity {
                 Chat.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        BotaoSalvas.setClickable(false);
+                        for(int i=0;i<layout.getChildCount();i++){
+                            View child=layout.getChildAt(i);
+                            child.setClickable(false);
+                            child.setFocusableInTouchMode(false);
+                        }
                         Refresh(v);
                     }
                 });
@@ -93,6 +101,12 @@ public class ListaConversas extends AppCompatActivity {
                     Chat.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            BotaoSalvas.setClickable(false);
+                            for(int i=0;i<layout.getChildCount();i++){
+                                View child=layout.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
                             VerChat(login, amigo);
                         }
                     });
@@ -155,6 +169,8 @@ public class ListaConversas extends AppCompatActivity {
 
     public void VerMensagensSalvas(View view) {
 
+        BotaoSalvas.setClickable(false);
+
         URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&remetente=" + getIntent().getStringExtra("Login")
                 + "&destinatario=ADefinirUsuario";
 
@@ -178,7 +194,7 @@ public class ListaConversas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoSalvas.setClickable(true);
                 Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }

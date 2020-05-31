@@ -25,6 +25,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
     String URL = "";
 
     EditText nomeUsuario,emailUsuario,senhaUsuario,dataNascUsuario;
+    Button BotaoCadastrar;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -35,12 +36,11 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_cadastrar_usuario);
 
-        nomeUsuario = (EditText)findViewById(R.id.NomeUsuarioCadastro);
-        emailUsuario = (EditText)findViewById(R.id.EmailCadastro);
-        senhaUsuario = (EditText)findViewById(R.id.SenhaCadastro);
-        dataNascUsuario = (EditText)findViewById(R.id.DataNascCadastro);
-
-        Button BotaoCadastrar = (Button)findViewById(R.id.BotaoCadastrar);
+        nomeUsuario = findViewById(R.id.NomeUsuarioCadastro);
+        emailUsuario = findViewById(R.id.EmailCadastro);
+        senhaUsuario = findViewById(R.id.SenhaCadastro);
+        dataNascUsuario = findViewById(R.id.DataNascCadastro);
+        BotaoCadastrar = findViewById(R.id.BotaoCadastrar);
     }
 
     public void CadastrarUsuario(View view) throws UnsupportedEncodingException {
@@ -54,6 +54,8 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        BotaoCadastrar.setClickable(false);
 
         String URLCadastrar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=cadastrarUsuario&dispositivo=android";
 
@@ -83,9 +85,8 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoCadastrar.setClickable(true);
                 Toast.makeText(AdminCadastrarUsuario.this, "Erro! Usuário já está cadastrado!", Toast.LENGTH_SHORT).show();
-                return;
 
             }
         });
@@ -97,7 +98,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
 
         final String login = getIntent().getStringExtra("Login");
 
-        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + login;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -108,16 +109,10 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
 
                 json = response;
                 if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                    Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
                     intent.putExtra("Login", login);
                     intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
+                    intent.putExtra("ListaUsuarios", json.toString());
                     startActivity(intent);
                 }
             }
@@ -125,9 +120,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(AdminCadastrarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
             }
         });
     }

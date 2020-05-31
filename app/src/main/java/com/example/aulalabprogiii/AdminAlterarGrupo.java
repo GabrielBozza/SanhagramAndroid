@@ -14,7 +14,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -48,12 +47,11 @@ public class AdminAlterarGrupo extends AppCompatActivity {
             TituloUsuariosGrupo.setShape(GradientDrawable.RECTANGLE);
             TituloUsuariosGrupo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-            LinearLayout layout = (LinearLayout) findViewById(R.id.LinearLayoutUsuariosGrupo);
+            final LinearLayout layout = findViewById(R.id.LinearLayoutUsuariosGrupo);
 
             BotaoGrupo = new Button(this);
             BotaoGrupo.setText("Usuários do "+getIntent().getStringExtra("NomeGrupo"));
             BotaoGrupo.setTransformationMethod(null);
-            //BotaoGrupo.setWidth(300);
             BotaoGrupo.setClickable(false);
             BotaoGrupo.setPadding(10, 16, 10, 16);
             BotaoGrupo.setTextSize(23);
@@ -66,7 +64,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
             BotaoGrupo.setGravity(Gravity.CENTER);
             layout.addView(BotaoGrupo);
 
-            LinearLayout layoutoutros = (LinearLayout) findViewById(R.id.LinearLayoutUsuariosForaGrupo);
+            final LinearLayout layoutoutros = findViewById(R.id.LinearLayoutUsuariosForaGrupo);
 
             BotaoGrupo = new Button(this);
             BotaoGrupo.setText("Usuários fora do Grupo");
@@ -99,6 +97,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
                     BotaoGrupo = new Button(this);
                     BotaoGrupo.setText(UsuGrupo);
+                    BotaoGrupo.setId(i+1);
                     BotaoGrupo.setTransformationMethod(null);
                     BotaoGrupo.setWidth(650);
                     BotaoGrupo.setPadding(10, 10, 10, 10);
@@ -112,6 +111,11 @@ public class AdminAlterarGrupo extends AppCompatActivity {
                     BotaoGrupo.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            for(int i=1;i<layout.getChildCount();i++){
+                                View child=layout.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
                             RemoverDoGrupo(nomeUsuarioGrupo);
                         }
                     });
@@ -136,6 +140,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
                     BotaoGrupo.setText( UsuForaGrupo);
                     BotaoGrupo.setTransformationMethod(null);
                     BotaoGrupo.setWidth(650);
+                    BotaoGrupo.setId(i+50);
                     BotaoGrupo.setPadding(10, 10, 10, 10);
                     BotaoGrupo.setTextSize(20);
                     BotaoGrupo.setBackground(Opcao_Conversa);
@@ -145,8 +150,13 @@ public class AdminAlterarGrupo extends AppCompatActivity {
                     BotaoGrupo.setLayoutParams(params);
 
                     BotaoGrupo.setOnClickListener(new View.OnClickListener() {
-                        @Override
                         public void onClick(View v) {
+                            for(int i=1;i<layoutoutros.getChildCount();i++){
+                                View child=layoutoutros.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
+
                             AdicionarAoGrupo(nomeUsuarioForaGrupo);
                         }
                     });

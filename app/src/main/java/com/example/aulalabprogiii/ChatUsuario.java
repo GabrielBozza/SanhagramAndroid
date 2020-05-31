@@ -3,7 +3,6 @@ package com.example.aulalabprogiii;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
@@ -20,7 +19,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Space;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
@@ -52,9 +50,9 @@ public class ChatUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat_usuario);
 
-        Mensagem = (EditText)findViewById(R.id.Mensagem);
-        BotaoEnviar = (Button)findViewById(R.id.BotaoEnviar);
-        mScrollView = (ScrollView)findViewById(R.id.chatScrollView);
+        Mensagem = findViewById(R.id.Mensagem);
+        BotaoEnviar = findViewById(R.id.BotaoEnviar);
+        mScrollView = findViewById(R.id.chatScrollView);
 
         String resultado = getIntent().getStringExtra("MensagensConversa");
         String login = getIntent().getStringExtra("Login");
@@ -76,7 +74,7 @@ public class ChatUsuario extends AppCompatActivity {
                 CabecalhoChat.setShape(GradientDrawable.RECTANGLE);
                 CabecalhoChat.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-                LinearLayout layoutCabecalho = (LinearLayout) findViewById(R.id.Cabecalho);
+                final LinearLayout layoutCabecalho = findViewById(R.id.Cabecalho);
                 NomeConversa = new Button(this);
                 NomeConversa.setText(getIntent().getStringExtra("Destinatario"));
                 NomeConversa.setTransformationMethod(null);
@@ -87,14 +85,17 @@ public class ChatUsuario extends AppCompatActivity {
                 NomeConversa.setGravity(Gravity.START);
                 LinearLayout.LayoutParams paramss = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT);
-                //paramss.weight=5;
-                //paramss.gravity=Gravity.START;
                 paramss.setMargins(16,0,16,0);
                 NomeConversa.setLayoutParams(paramss);
 
                 NomeConversa.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        for(int i=0;i<layoutCabecalho.getChildCount();i++){
+                            View child=layoutCabecalho.getChildAt(i);
+                            child.setClickable(false);
+                            child.setFocusableInTouchMode(false);
+                        }
                         Refresh(v);
                     }
                 });
@@ -117,10 +118,6 @@ public class ChatUsuario extends AppCompatActivity {
                     NomeConversa.setTextSize(15);
                     NomeConversa.setBackground(Botao_SairGrupo);
                     NomeConversa.setGravity(Gravity.CENTER);
-                    //LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
-                    //        LinearLayout.LayoutParams.WRAP_CONTENT);
-                    //paramss.weight=1;
-                    //paramss.gravity=Gravity.END;
                     paramss.setMargins(16,0,32,2);
                     NomeConversa.setLayoutParams(paramss);
 
@@ -192,19 +189,18 @@ public class ChatUsuario extends AppCompatActivity {
                     SpannableString stringBolhaMsgmDireita = new SpannableString(bolha_mensagem_direita);
                     stringBolhaMsgmDireita.setSpan(new AbsoluteSizeSpan(12, true), 0, 6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                    LinearLayout layout = (LinearLayout) findViewById(R.id.ConversaUsuario);
+                    LinearLayout layout = findViewById(R.id.ConversaUsuario);
                     Texto_Mensagem = new Button(this);
-
                     Texto_Mensagem.setTransformationMethod(null);
                     Texto_Mensagem.setTextColor(getResources().getColor(R.color.white));
 
                     if(remetente.equals(login)) {
                         Texto_Mensagem.setBackground(Bolha_direita);
                         Texto_Mensagem.setText(stringBolhaMsgmDireita);
-                        Texto_Mensagem.setGravity(Gravity.RIGHT);
+                        Texto_Mensagem.setGravity(Gravity.END);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
-                        params.gravity=Gravity.RIGHT;
+                        params.gravity=Gravity.END;
                         params.setMargins(16,10,8,10);
                         Texto_Mensagem.setLayoutParams(params);
 
@@ -239,7 +235,7 @@ public class ChatUsuario extends AppCompatActivity {
                     else if (remetente.equals(destinatario)){
                         Texto_Mensagem.setBackground(Bolha_AvisoGrupo);
                         Texto_Mensagem.setText(stringBolhaAvisoGrupo);
-                        Texto_Mensagem.setGravity(Gravity.LEFT);
+                        Texto_Mensagem.setGravity(Gravity.START);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(8,10,16,10);
@@ -249,7 +245,7 @@ public class ChatUsuario extends AppCompatActivity {
                     else {
                         Texto_Mensagem.setBackground(Bolha_esquerda);
                         Texto_Mensagem.setText(stringBolhaMsgmEsquerda);
-                        Texto_Mensagem.setGravity(Gravity.LEFT);
+                        Texto_Mensagem.setGravity(Gravity.START);
                         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT);
                         params.setMargins(8,10,16,10);
@@ -266,7 +262,7 @@ public class ChatUsuario extends AppCompatActivity {
                 Espaco_vazio.setColor(getResources().getColor(R.color.transparent));
                 Espaco_vazio.setShape(GradientDrawable.RECTANGLE);
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.ConversaUsuario);
+                LinearLayout layout = findViewById(R.id.ConversaUsuario);
                 Texto_Mensagem = new Button(this);
                 Texto_Mensagem.setText("\n\n\n");
                 Texto_Mensagem.setBackground(Espaco_vazio);
@@ -323,7 +319,6 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
 
             }
@@ -350,6 +345,7 @@ public class ChatUsuario extends AppCompatActivity {
         params.put("texto_mensagem",texto_mensagem);
 
         Mensagem.setText("");//Limpa o campo da mensagem
+        BotaoEnviar.setClickable(false);
 
         client = new AsyncHttpClient();
         client.post(URLenviar,params, new JsonHttpResponseHandler() {
@@ -371,10 +367,8 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoEnviar.setClickable(true);
                 Toast.makeText(ChatUsuario.this, "Erro - Usuário removido do sistema!", Toast.LENGTH_SHORT).show();
-                return;
-
             }
         });
 
@@ -415,8 +409,7 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -483,7 +476,6 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
 
             }

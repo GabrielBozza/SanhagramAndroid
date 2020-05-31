@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +25,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
 
     TextView nomeUsu;
     EditText emailUsu,senhaUsu,datanascUsu;
+    Button BotaoSalvar;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -34,13 +36,13 @@ public class AdminAlterarUsuario extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_alterar_usuario);
 
-        nomeUsu = (TextView)findViewById(R.id.NomeUsuarioCadastro);
-        emailUsu = (EditText)findViewById(R.id.EmailCadastro);
-        senhaUsu = (EditText)findViewById(R.id.SenhaCadastro);
-        datanascUsu = (EditText)findViewById(R.id.DataNascCadastro);
+        nomeUsu = findViewById(R.id.NomeUsuarioCadastro);
+        emailUsu = findViewById(R.id.EmailCadastro);
+        senhaUsu = findViewById(R.id.SenhaCadastro);
+        datanascUsu = findViewById(R.id.DataNascCadastro);
+        BotaoSalvar = findViewById(R.id.BotaoCadastrar);
 
         String resultado = getIntent().getStringExtra("UsuarioAlterar");
-        final String login = getIntent().getStringExtra("Login");
 
         try {
             JSONObject response = new JSONObject(resultado);
@@ -107,6 +109,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
             Toast.makeText(this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
             return;
         }
+        BotaoSalvar.setClickable(false);
 
         String URLAlterarCadastro = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarUsuario&dispositivo=android";
 
@@ -136,9 +139,8 @@ public class AdminAlterarUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
+                BotaoSalvar.setClickable(true);
                 Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-                return;
 
             }
         });

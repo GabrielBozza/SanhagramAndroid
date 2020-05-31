@@ -36,7 +36,6 @@ public class AdminListarUsuarios extends AppCompatActivity {
         setContentView(R.layout.activity_admin_listar_usuarios);
 
         String resultado = getIntent().getStringExtra("ListaUsuarios");
-        final String login = getIntent().getStringExtra("Login");
 
         try {
 
@@ -53,7 +52,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 Titulo.setShape(GradientDrawable.RECTANGLE);
                 Titulo.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-                LinearLayout layout = (LinearLayout) findViewById(R.id.ListaUsuariosLinearLayout);
+                final LinearLayout layout = findViewById(R.id.ListaUsuariosLinearLayout);
 
                 BotaoUsuario = new Button(this);
                 BotaoUsuario.setText("Cadastrar Usuário");
@@ -73,6 +72,11 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 BotaoUsuario.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        for(int i=0;i<layout.getChildCount();i++){
+                            View child=layout.getChildAt(i);
+                            child.setClickable(false);
+                            child.setFocusableInTouchMode(false);
+                        }
                         abrirTelaCadastroUsuario(v);
                     }
                 });
@@ -117,6 +121,11 @@ public class AdminListarUsuarios extends AppCompatActivity {
                     BotaoUsuario.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            for(int i=0;i<layout.getChildCount();i++){
+                                View child=layout.getChildAt(i);
+                                child.setClickable(false);
+                                child.setFocusableInTouchMode(false);
+                            }
                             VerCadastroUsuario(nomeUsuario);
                         }
                     });
