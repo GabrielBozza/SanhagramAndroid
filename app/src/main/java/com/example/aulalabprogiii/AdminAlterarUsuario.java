@@ -25,7 +25,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class AdminAlterarUsuario extends AppCompatActivity {
 
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
     TextView nomeUsu;
     EditText emailUsu,senhaUsu,datanascUsu;
     Button BotaoSalvar;
@@ -50,6 +50,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         try {
 
@@ -71,7 +72,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
         String nomeUsuarioExcluir = nomeUsu.getText().toString();
 
         String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirUsuario&dispositivo=android"
-                + "&login=" + nomeUSU + "&nomeusuario="+ nomeUsuarioExcluir;
+                + "&login=" + nomeUSU + "&nomeusuario="+ nomeUsuarioExcluir+ "&chaveUSU="+chaveUSU;
 
         if(nomeUsuarioExcluir.equals("admin")){ //NÃO PODE DELETAR O ADMIN - SUICÍDIO
             Toast.makeText(AdminAlterarUsuario.this, "Não se mate!!!! Não deixo!", Toast.LENGTH_LONG).show();
@@ -123,6 +124,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
         params.put("email",EmailUsu);
         params.put("senha",SenhaUsu);
         params.put("data",DataNascUsu);
+        params.put("chaveUSU",chaveUSU);
 
         client = new AsyncHttpClient();
         client.post(URLAlterarCadastro,params, new JsonHttpResponseHandler() {
@@ -151,7 +153,8 @@ public class AdminAlterarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + nomeUSU;
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
+                + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

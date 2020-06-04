@@ -26,7 +26,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -43,6 +43,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         try {
 
@@ -151,7 +152,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        URL = PrefixoURL+ IdentificadorURL + "&login=" + nomeUSU;
+        URL = PrefixoURL+ IdentificadorURL + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -180,7 +181,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
         final String nomeUsuario = a;
 
         URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarCadastro&dispositivo=android"
-                + "&login=" + nomeUSU + "&nomeUsuario=" + nomeUsuario;
+                + "&login=" + nomeUSU + "&nomeUsuario=" + nomeUsuario+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

@@ -23,7 +23,7 @@ public class EnviarMensagemSalva extends AppCompatActivity {
 
     Button BotaoEnviar;
     EditText Mensagem,Destinatario;
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -43,14 +43,15 @@ public class EnviarMensagemSalva extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
     }
 
     @Override
     public void onBackPressed() {//VOLTAR PARA LISTA DE MENSAGENS SALVAS
 
         String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
-                + "&remetente=" + nomeUSU
-                + "&destinatario=ADefinirUsuario";
+                + "&login=" + nomeUSU
+                + "&destinatario=ADefinirUsuario"+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -89,9 +90,10 @@ public class EnviarMensagemSalva extends AppCompatActivity {
         String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",nomeUSU);
+        params.put("login",nomeUSU);
         params.put("destinatario",destinatario);
         params.put("texto_mensagem",texto_mensagem);
+        params.put("chaveUSU",chaveUSU);
 
         Mensagem.setText("");//Limpa o campo da mensagem
         BotaoEnviar.setClickable(false);

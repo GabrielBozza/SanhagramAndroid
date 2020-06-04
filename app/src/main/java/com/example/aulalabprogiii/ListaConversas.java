@@ -26,7 +26,7 @@ public class ListaConversas extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android";
     String URL = "";
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -46,13 +46,27 @@ public class ListaConversas extends AppCompatActivity {
 
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
-        if(nomeUSU.length()==0) {
+        if(nomeUSU.length()==0) {//AO LOGAR
 
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString("LOGIN", getIntent().getStringExtra("Login")); //GUARDA O NOME DO USUARIO LOGADO
             editor.commit();
             nomeUSU = getIntent().getStringExtra("Login");
+
+            try {
+
+                JSONObject response = new JSONObject(resultado);
+
+                editor.putString("CHAVE_USUARIO", response.getString("CHAVE_USUARIO")); //GUARDA O NOME DO USUARIO LOGADO
+                editor.commit();
+                chaveUSU = response.getString("CHAVE_USUARIO");
+                System.out.println(chaveUSU);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
 
         }
 
@@ -148,7 +162,7 @@ public class ListaConversas extends AppCompatActivity {
 
         final String destinatario = b;
 
-        URL = PrefixoURL + IdentificadorURL + "&remetente=" + nomeUSU + "&destinatario=" + destinatario;
+        URL = PrefixoURL + IdentificadorURL + "&login=" + nomeUSU + "&destinatario=" + destinatario+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -178,8 +192,8 @@ public class ListaConversas extends AppCompatActivity {
 
         BotaoSalvas.setClickable(false);
 
-        URL = PrefixoURL + IdentificadorURL + "&remetente=" + nomeUSU
-                + "&destinatario=ADefinirUsuario";
+        URL = PrefixoURL + IdentificadorURL + "&login=" + nomeUSU
+                + "&destinatario=ADefinirUsuario"+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -214,23 +228,50 @@ public class ListaConversas extends AppCompatActivity {
 
     public void Sair(View view){
 
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=sair&dispositivo=android" + "&login=" + nomeUSU
+                + "&chaveUSU="+chaveUSU;
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                try {
+                    if(response.getString("RESULTADO").equals("SUCESSO")) {
+                        Toast.makeText(ListaConversas.this, "Você saiu!", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        Toast.makeText(ListaConversas.this, "Erro de Logout!", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Toast.makeText(ListaConversas.this, "Erro de Logout!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        Intent intent = new Intent( this, MainActivity.class);
-        intent.putExtra("PrefixoURL", prefs.getString("PREFIXO_URL", ""));
-
         editor.putString("LOGIN", "");     //RESET TO DEFAULT VALUE
         editor.putString("PREFIXO_URL", "");     //RESET TO DEFAULT VALUE
+        editor.putString("CHAVE_USUARIO", "");
         editor.commit();
 
+        Intent intent = new Intent( this, MainActivity.class);
         startActivity(intent);
 
     }
     public void Refresh(View view) {
 
         URL =  PrefixoURL+ "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android"
-                + "&login=" + nomeUSU;
+                + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

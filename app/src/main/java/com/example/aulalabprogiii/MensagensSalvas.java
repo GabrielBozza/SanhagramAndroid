@@ -38,7 +38,7 @@ public class MensagensSalvas extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -58,6 +58,7 @@ public class MensagensSalvas extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         GradientDrawable Botao_Enviar = new GradientDrawable();
         Botao_Enviar.setColor(getResources().getColor(R.color.colorAccent));
@@ -214,8 +215,8 @@ public class MensagensSalvas extends AppCompatActivity {
         final String idMensagem = a;
 
         URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
-                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
-                + "&idmensagem=" + idMensagem;
+                + "&login=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+                + "&idmensagem=" + idMensagem+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -244,7 +245,7 @@ public class MensagensSalvas extends AppCompatActivity {
     @Override
     public void onBackPressed() {//VOLTAR PARA LISTA DE CONVERSAS RECENTES
 
-        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
+        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -288,9 +289,10 @@ public class MensagensSalvas extends AppCompatActivity {
         String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",nomeUSU);
+        params.put("login",nomeUSU);
         params.put("destinatario","ADefinirUsuario");
         params.put("texto_mensagem",texto_mensagem);
+        params.put("chaveUSU",chaveUSU);
 
         Mensagem.setText("");//Limpa o campo da mensagem
         BotaoSalvar.setClickable(false);

@@ -40,7 +40,7 @@ public class ChatUsuario extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -60,6 +60,7 @@ public class ChatUsuario extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         GradientDrawable Botao_Enviar = new GradientDrawable();
         Botao_Enviar.setColor(getResources().getColor(R.color.colorAccent));
@@ -292,7 +293,7 @@ public class ChatUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
+        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -338,9 +339,10 @@ public class ChatUsuario extends AppCompatActivity {
         String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",remetente);
+        params.put("login",remetente);
         params.put("destinatario",destinatario);
         params.put("texto_mensagem",texto_mensagem);
+        params.put("chaveUSU",chaveUSU);
 
         Mensagem.setText("");//Limpa o campo da mensagem
         BotaoEnviar.setClickable(false);
@@ -375,7 +377,7 @@ public class ChatUsuario extends AppCompatActivity {
         String nomeGrupo = a ;
 
         URL =  PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=sairDoGrupo&dispositivo=android"
-                + "&login=" + nomeUSU + "&nomeGrupo=" + nomeGrupo;
+                + "&login=" + nomeUSU + "&nomeGrupo=" + nomeGrupo+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -412,8 +414,8 @@ public class ChatUsuario extends AppCompatActivity {
         final String idMensagem = a;
 
         URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
-                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
-                + "&idmensagem=" + idMensagem;
+                + "&login=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+                + "&idmensagem=" + idMensagem+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -442,7 +444,7 @@ public class ChatUsuario extends AppCompatActivity {
     public void Refresh(View view) {
 
         URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
-                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario");
+                + "&login=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

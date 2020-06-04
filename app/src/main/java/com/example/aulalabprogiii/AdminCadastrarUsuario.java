@@ -21,7 +21,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class AdminCadastrarUsuario extends AppCompatActivity {
 
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     EditText nomeUsuario,emailUsuario,senhaUsuario,dataNascUsuario;
     Button BotaoCadastrar;
@@ -44,6 +44,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
     }
 
     public void CadastrarUsuario(View view) {
@@ -68,6 +69,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
         params.put("email",emailUsu);
         params.put("senha",senhaUsu);
         params.put("data",dataNascUsu);
+        params.put("chaveUSU",chaveUSU);
 
         client = new AsyncHttpClient();
         client.post(URLCadastrar,params, new JsonHttpResponseHandler() {
@@ -97,7 +99,8 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + nomeUSU;
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
+                + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

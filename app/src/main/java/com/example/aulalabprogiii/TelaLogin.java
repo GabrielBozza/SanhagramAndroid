@@ -23,7 +23,7 @@ public class TelaLogin extends AppCompatActivity {
     EditText NomeUsuario,Senha;
     Button Login;
 
-    String nomeUSU,senha,PrefixoURL,URL;
+    String nomeUSU,senha,PrefixoURL,URL,chaveUSU;
     String IdentificadorURL = "/SanhagramServletsJSP/autenticador?dispositivo=android";
 
     RequestParams params;
@@ -38,6 +38,7 @@ public class TelaLogin extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         URL = PrefixoURL+IdentificadorURL;
 
@@ -47,7 +48,8 @@ public class TelaLogin extends AppCompatActivity {
 
         if(nomeUSU.length()>0){//USUARIO LOGOU E NAO SAIU DA CONTA
 
-            URL =  PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android" + "&login=" + nomeUSU;
+            URL =  PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android" + "&login=" + nomeUSU
+            +"&chaveUSU="+chaveUSU;
             client = new AsyncHttpClient();
             client.get(URL, new JsonHttpResponseHandler() {
 
@@ -59,14 +61,12 @@ public class TelaLogin extends AppCompatActivity {
                     if(nomeUSU.equals("admin")) {
                         Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
                         intent.putExtra("Login", nomeUSU);
-                        //intent.putExtra("PrefixoURL", PrefixoURL);
                         intent.putExtra("ListaConversas", json.toString());
                         startActivity(intent);
                     }
                     else{
                         Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
                         intent.putExtra("Login", nomeUSU);
-                        //intent.putExtra("PrefixoURL", PrefixoURL);
                         intent.putExtra("ListaConversas", json.toString());
                         startActivity(intent);
                     }
@@ -112,14 +112,12 @@ public class TelaLogin extends AppCompatActivity {
                         if(nomeUSU.equals("admin")) {
                             Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
                             intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
-                            //intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
                             intent.putExtra("ListaConversas", json.toString());
                             startActivity(intent);
                         }
                         else{
                             Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
                             intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
-                            //intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
                             intent.putExtra("ListaConversas", json.toString());
                             startActivity(intent);
                         }

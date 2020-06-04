@@ -28,7 +28,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class AdminAlterarGrupo extends AppCompatActivity {
 
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -45,6 +45,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         try {
 
@@ -184,7 +185,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
      String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=removerDoGrupo&dispositivo=android"
              + "&login=" + nomeUSU + "&nomeGrupo=" + getIntent().getStringExtra("NomeGrupo")
-             + "&nomeUsuario=" + a;
+             + "&nomeUsuario=" + a + "&chaveUSU="+chaveUSU;
 
      client = new AsyncHttpClient();
      client.get(URL, new JsonHttpResponseHandler() {
@@ -216,7 +217,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
      String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=adicionarAoGrupo&dispositivo=android"
              + "&login=" + nomeUSU + "&nomeGrupo=" + getIntent().getStringExtra("NomeGrupo")
-             + "&nomeUsuario=" + a;
+             + "&nomeUsuario=" + a+ "&chaveUSU="+chaveUSU;
 
      client = new AsyncHttpClient();
      client.get(URL, new JsonHttpResponseHandler() {
@@ -246,7 +247,7 @@ public class AdminAlterarGrupo extends AppCompatActivity {
     public void onBackPressed() {
 
         String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
-                + "&login=" + nomeUSU;
+                + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {

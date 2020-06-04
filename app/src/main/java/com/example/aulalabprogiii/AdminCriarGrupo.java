@@ -32,7 +32,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
     List<CheckBox> usuariosGrupoCheck = new ArrayList<>();
     String usuariosGrupoString="";
-    String PrefixoURL,nomeUSU;
+    String PrefixoURL,nomeUSU,chaveUSU;
     EditText nomeNovoGrupo;
     Button NomeConversa, BotaoCriar;
     CheckBox cb;
@@ -53,6 +53,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
         SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
         PrefixoURL = prefs.getString("PREFIXO_URL", "");
         nomeUSU = prefs.getString("LOGIN", "");
+        chaveUSU = prefs.getString("CHAVE_USUARIO", "");
 
         try {
 
@@ -106,7 +107,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
     public void onBackPressed() {
 
         String URL = PrefixoURL +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
-                + "&login=" + nomeUSU;
+                + "&login=" + nomeUSU+ "&chaveUSU="+chaveUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -153,6 +154,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
         params.put("login",nomeUSU);
         params.put("nomeGrupo",nomeGrupo);
         params.put("listaNovoGrupo",usuariosGrupoString);
+        params.put("chaveUSU",chaveUSU);
 
         client = new AsyncHttpClient();
         client.post(URLCriarGrupo,params, new JsonHttpResponseHandler() {
