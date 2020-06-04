@@ -40,7 +40,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="http://g-boz-a8898b0f.localhost.run"
+        android:text="http://192.168.15.5:8080"
         android:hint="Prefixo da URL"
         app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"

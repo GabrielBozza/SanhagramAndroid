@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,14 +17,13 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 
 public class EnviarMensagemSalva extends AppCompatActivity {
 
     Button BotaoEnviar;
     EditText Mensagem,Destinatario;
+    String PrefixoURL,nomeUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -38,13 +39,17 @@ public class EnviarMensagemSalva extends AppCompatActivity {
         BotaoEnviar = findViewById(R.id.BotaoEnviarMensagemSalva);
 
         Mensagem.setText(getIntent().getStringExtra("TextoMensagemSalva"));
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
     }
 
     @Override
     public void onBackPressed() {//VOLTAR PARA LISTA DE MENSAGENS SALVAS
 
-        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
-                + "&remetente=" + getIntent().getStringExtra("Login")
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
+                + "&remetente=" + nomeUSU
                 + "&destinatario=ADefinirUsuario";
 
         client = new AsyncHttpClient();
@@ -58,8 +63,6 @@ public class EnviarMensagemSalva extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login") );
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", "ADefinirUsuario");
                 startActivity(intent);
             }
@@ -67,15 +70,13 @@ public class EnviarMensagemSalva extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(EnviarMensagemSalva.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(EnviarMensagemSalva.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void EnviarMensagemSalva(View view) throws UnsupportedEncodingException {
+    public void EnviarMensagemSalvaMetodo(View view) {
 
         String texto_mensagem = Mensagem.getText().toString();
         String destinatario = Destinatario.getText().toString();
@@ -85,10 +86,10 @@ public class EnviarMensagemSalva extends AppCompatActivity {
             return;
         }
 
-        String URLenviar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
+        String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",getIntent().getStringExtra("Login"));
+        params.put("remetente",nomeUSU);
         params.put("destinatario",destinatario);
         params.put("texto_mensagem",texto_mensagem);
 
@@ -106,8 +107,6 @@ public class EnviarMensagemSalva extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL",getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", Destinatario.getText().toString());
                 startActivity(intent);
             }
@@ -116,7 +115,7 @@ public class EnviarMensagemSalva extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoEnviar.setClickable(true);
-                Toast.makeText(EnviarMensagemSalva.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_LONG).show();
+                Toast.makeText(EnviarMensagemSalva.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_SHORT).show();
             }
         });
 

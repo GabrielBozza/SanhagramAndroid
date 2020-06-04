@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -15,14 +17,11 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 
 public class AdminCadastrarUsuario extends AppCompatActivity {
 
-    String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
-    String URL = "";
+    String PrefixoURL,nomeUSU;
 
     EditText nomeUsuario,emailUsuario,senhaUsuario,dataNascUsuario;
     Button BotaoCadastrar;
@@ -41,9 +40,13 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
         senhaUsuario = findViewById(R.id.SenhaCadastro);
         dataNascUsuario = findViewById(R.id.DataNascCadastro);
         BotaoCadastrar = findViewById(R.id.BotaoCadastrar);
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
     }
 
-    public void CadastrarUsuario(View view) throws UnsupportedEncodingException {
+    public void CadastrarUsuario(View view) {
 
         String nomeUsu = nomeUsuario.getText().toString();
         String emailUsu = emailUsuario.getText().toString();
@@ -57,10 +60,10 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
 
         BotaoCadastrar.setClickable(false);
 
-        String URLCadastrar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=cadastrarUsuario&dispositivo=android";
+        String URLCadastrar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=cadastrarUsuario&dispositivo=android";
 
         params = new RequestParams();
-        params.put("login",getIntent().getStringExtra("Login"));
+        params.put("login",nomeUSU);
         params.put("nome",nomeUsu);
         params.put("email",emailUsu);
         params.put("senha",senhaUsu);
@@ -72,13 +75,12 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Toast.makeText(AdminCadastrarUsuario.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminCadastrarUsuario.this, "Usuário cadastrado com sucesso!", Toast.LENGTH_SHORT).show();
+
                 json = response;
 
                 Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
                 intent.putExtra("ListaUsuarios", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
@@ -87,7 +89,6 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoCadastrar.setClickable(true);
                 Toast.makeText(AdminCadastrarUsuario.this, "Erro! Usuário já está cadastrado!", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -96,9 +97,7 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        final String login = getIntent().getStringExtra("Login");
-
-        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + login;
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -108,19 +107,16 @@ public class AdminCadastrarUsuario extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaUsuarios", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                intent.putExtra("ListaUsuarios", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(AdminCadastrarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminCadastrarUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
     }

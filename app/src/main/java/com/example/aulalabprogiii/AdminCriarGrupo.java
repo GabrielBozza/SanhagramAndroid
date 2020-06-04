@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +32,7 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
     List<CheckBox> usuariosGrupoCheck = new ArrayList<>();
     String usuariosGrupoString="";
+    String PrefixoURL,nomeUSU;
     EditText nomeNovoGrupo;
     Button NomeConversa, BotaoCriar;
     CheckBox cb;
@@ -46,6 +49,10 @@ public class AdminCriarGrupo extends AppCompatActivity {
         nomeNovoGrupo = findViewById(R.id.NomeNovoGrupo);
         BotaoCriar = findViewById(R.id.BotaoEnviar);
         String resultado = getIntent().getStringExtra("ListaUsuarios");
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
 
         try {
 
@@ -98,8 +105,8 @@ public class AdminCriarGrupo extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        String URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login");
+        String URL = PrefixoURL +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarGrupos&dispositivo=android"
+                + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -107,21 +114,18 @@ public class AdminCriarGrupo extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+
                 json = response;
 
                 Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
                 intent.putExtra("ListaGrupos", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminCriarGrupo.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminCriarGrupo.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -143,10 +147,10 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
         BotaoCriar.setClickable(false);
 
-        String URLCriarGrupo = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=criarGrupo&dispositivo=android";
+        String URLCriarGrupo = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=criarGrupo&dispositivo=android";
 
         params = new RequestParams();
-        params.put("login",getIntent().getStringExtra("Login"));
+        params.put("login",nomeUSU);
         params.put("nomeGrupo",nomeGrupo);
         params.put("listaNovoGrupo",usuariosGrupoString);
 
@@ -162,8 +166,6 @@ public class AdminCriarGrupo extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
                 intent.putExtra("ListaGrupos", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
@@ -174,8 +176,6 @@ public class AdminCriarGrupo extends AppCompatActivity {
                 Toast.makeText(AdminCriarGrupo.this, "Erro - Um grupo com o nome escolhido já existe, escolha outro nome!", Toast.LENGTH_SHORT).show();
             }
         });
-
-
 
     }
 }

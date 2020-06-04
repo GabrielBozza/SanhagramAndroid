@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class ListaConversas extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -36,9 +39,22 @@ public class ListaConversas extends AppCompatActivity {
         setContentView(R.layout.activity_lista_conversas);
 
         String resultado = getIntent().getStringExtra("ListaConversas");
-        final String login = getIntent().getStringExtra("Login");
 
         BotaoSalvas = findViewById(R.id.BotaoMensagensSalvas);
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
+
+        if(nomeUSU.length()==0) {
+
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString("LOGIN", getIntent().getStringExtra("Login")); //GUARDA O NOME DO USUARIO LOGADO
+            editor.commit();
+            nomeUSU = getIntent().getStringExtra("Login");
+
+        }
 
         try {
 
@@ -78,7 +94,7 @@ public class ListaConversas extends AppCompatActivity {
                 for (int i = 0; i < response.getJSONArray("CONVERSAS").length(); i++) {
 
                     GradientDrawable Opcao_Conversa = new GradientDrawable();
-                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa)); // Changes this drawbale to use a single color instead of a gradient
+                    Opcao_Conversa.setColor(getResources().getColor(R.color.Conversa));
                     Opcao_Conversa.setShape(GradientDrawable.RECTANGLE);
                     Opcao_Conversa.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
@@ -107,7 +123,7 @@ public class ListaConversas extends AppCompatActivity {
                                 child.setClickable(false);
                                 child.setFocusableInTouchMode(false);
                             }
-                            VerChat(login, amigo);
+                            VerChat(amigo);
                         }
                     });
 
@@ -128,16 +144,11 @@ public class ListaConversas extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        Toast.makeText(ListaConversas.this,"Para realizar logout clique no botão sair!",Toast.LENGTH_LONG).show();
-    }
+    public void VerChat(String b) {
 
-    public void VerChat(String a, String b) {
-        final String remetente = a;
         final String destinatario = b;
 
-        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&remetente=" + remetente + "&destinatario=" + destinatario;
+        URL = PrefixoURL + IdentificadorURL + "&remetente=" + nomeUSU + "&destinatario=" + destinatario;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -150,8 +161,6 @@ public class ListaConversas extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", remetente);
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", destinatario);
                 startActivity(intent);
             }
@@ -159,9 +168,7 @@ public class ListaConversas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -171,7 +178,7 @@ public class ListaConversas extends AppCompatActivity {
 
         BotaoSalvas.setClickable(false);
 
-        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&remetente=" + getIntent().getStringExtra("Login")
+        URL = PrefixoURL + IdentificadorURL + "&remetente=" + nomeUSU
                 + "&destinatario=ADefinirUsuario";
 
         client = new AsyncHttpClient();
@@ -185,8 +192,6 @@ public class ListaConversas extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login") );
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", "ADefinirUsuario");
                 startActivity(intent);
             }
@@ -195,8 +200,7 @@ public class ListaConversas extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoSalvas.setClickable(true);
-                Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -204,23 +208,29 @@ public class ListaConversas extends AppCompatActivity {
     public void abrirTelaEnviarMensagemDireto(View view){
 
         Intent intent = new Intent( this, EnviarMensagemDireto.class);
-        intent.putExtra("Login", getIntent().getStringExtra("Login"));
-        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
         startActivity(intent);
 
     }
 
     public void Sair(View view){
 
-        Intent intent = new Intent( this, TelaLogin.class);
-        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+
+        Intent intent = new Intent( this, MainActivity.class);
+        intent.putExtra("PrefixoURL", prefs.getString("PREFIXO_URL", ""));
+
+        editor.putString("LOGIN", "");     //RESET TO DEFAULT VALUE
+        editor.putString("PREFIXO_URL", "");     //RESET TO DEFAULT VALUE
+        editor.commit();
+
         startActivity(intent);
 
     }
     public void Refresh(View view) {
 
-        URL =  getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login");
+        URL =  PrefixoURL+ "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android"
+                + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -231,30 +241,23 @@ public class ListaConversas extends AppCompatActivity {
                 Toast.makeText(ListaConversas.this, "Lista atualizada!", Toast.LENGTH_SHORT).show();
 
                 json = response;
-                if(getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                }
-                else{
-                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                intent.putExtra("ListaConversas", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
                 Toast.makeText(ListaConversas.this, "Erro!", Toast.LENGTH_LONG).show();
-
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        Toast.makeText(ListaConversas.this,"Para realizar logout clique no botão sair!",Toast.LENGTH_LONG).show();
     }
 }

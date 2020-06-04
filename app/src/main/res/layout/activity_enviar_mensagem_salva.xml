@@ -89,7 +89,7 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/botao_geral"
-                android:onClick="EnviarMensagemSalva"
+                android:onClick="EnviarMensagemSalvaMetodo"
                 android:text="ENVIAR"
                 android:textColor="@color/white" />
         </LinearLayout>

@@ -5,7 +5,9 @@ import com.loopj.android.http.*;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,10 +23,8 @@ public class TelaLogin extends AppCompatActivity {
     EditText NomeUsuario,Senha;
     Button Login;
 
-    String nome,senha,PrefixoURL,URL;
-    //String PrefixoURL = "http://192.168.15.5:8080";//PARTE QUE MUDA QUANDO EU USO O LACALHOST RUN (PARA Q PESSOAS DE FORA DA MINHA REDE POSSAM ACESSAR)
+    String nomeUSU,senha,PrefixoURL,URL;
     String IdentificadorURL = "/SanhagramServletsJSP/autenticador?dispositivo=android";
-
 
     RequestParams params;
     AsyncHttpClient client;
@@ -35,22 +35,61 @@ public class TelaLogin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tela_login);
 
-        PrefixoURL = getIntent().getStringExtra("PrefixoURL");
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
+
         URL = PrefixoURL+IdentificadorURL;
 
         NomeUsuario = (EditText)findViewById(R.id.NomeUsuario);
         Senha = (EditText)findViewById(R.id.Senha);
         Login = (Button)findViewById(R.id.BotaoLogin);
 
+        if(nomeUSU.length()>0){//USUARIO LOGOU E NAO SAIU DA CONTA
+
+            URL =  PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android" + "&login=" + nomeUSU;
+            client = new AsyncHttpClient();
+            client.get(URL, new JsonHttpResponseHandler() {
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    Toast.makeText(TelaLogin.this, "Login automático "+nomeUSU+" !", Toast.LENGTH_SHORT).show();
+                    json = response;
+                    if(nomeUSU.equals("admin")) {
+                        Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                        intent.putExtra("Login", nomeUSU);
+                        //intent.putExtra("PrefixoURL", PrefixoURL);
+                        intent.putExtra("ListaConversas", json.toString());
+                        startActivity(intent);
+                    }
+                    else{
+                        Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                        intent.putExtra("Login", nomeUSU);
+                        //intent.putExtra("PrefixoURL", PrefixoURL);
+                        intent.putExtra("ListaConversas", json.toString());
+                        startActivity(intent);
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Toast.makeText(TelaLogin.this, "Erro!", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+        }
+
         Login.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v){
 
-                nome = NomeUsuario.getText().toString();
+                nomeUSU = NomeUsuario.getText().toString();
                 senha = Senha.getText().toString();
 
-                if (nome.matches("")||senha.matches("")) {
+                if (nomeUSU.matches("")||senha.matches("")) {
                     Toast.makeText(TelaLogin.this, "Preencha todos os campos!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -58,7 +97,7 @@ public class TelaLogin extends AppCompatActivity {
                 Login.setClickable(false);//BLOQUEIA O BOTAO E SOH O HABILITA NOVAMENTE SE OCORRER ALGUM ERRO
 
                 params = new RequestParams();
-                params.put("nome",nome);
+                params.put("nome",nomeUSU);
                 params.put("senha",senha);
 
                 client = new AsyncHttpClient();
@@ -70,17 +109,17 @@ public class TelaLogin extends AppCompatActivity {
 
                         json = response;
 
-                        if(nome.equals("admin")) {
+                        if(nomeUSU.equals("admin")) {
                             Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                            intent.putExtra("Login", nome);//PARA MANTER REF AO USUARIO
-                            intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
+                            intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
+                            //intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
                             intent.putExtra("ListaConversas", json.toString());
                             startActivity(intent);
                         }
                         else{
                             Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                            intent.putExtra("Login", nome);//PARA MANTER REF AO USUARIO
-                            intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
+                            intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
+                            //intent.putExtra("PrefixoURL", PrefixoURL);//PECULIARIDADE DE USAR LOCALHOST.RUN--PREFIXO MUDA
                             intent.putExtra("ListaConversas", json.toString());
                             startActivity(intent);
                         }

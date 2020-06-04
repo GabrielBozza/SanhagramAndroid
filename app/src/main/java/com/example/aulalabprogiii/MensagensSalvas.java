@@ -3,8 +3,10 @@ package com.example.aulalabprogiii;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -26,8 +28,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 
 public class MensagensSalvas extends AppCompatActivity {
@@ -38,6 +38,7 @@ public class MensagensSalvas extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -54,12 +55,15 @@ public class MensagensSalvas extends AppCompatActivity {
 
         String resultado = getIntent().getStringExtra("MensagensConversa");
 
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
+
         GradientDrawable Botao_Enviar = new GradientDrawable();
         Botao_Enviar.setColor(getResources().getColor(R.color.colorAccent));
         Botao_Enviar.setShape(GradientDrawable.RECTANGLE);
         Botao_Enviar.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
         BotaoSalvar.setBackground(Botao_Enviar);
-
 
         try {
 
@@ -72,7 +76,8 @@ public class MensagensSalvas extends AppCompatActivity {
                 CabecalhoChat.setShape(GradientDrawable.RECTANGLE);
                 CabecalhoChat.setCornerRadii(new float[]{25, 25, 25, 25, 25, 25, 25, 25});
 
-                LinearLayout layoutCabecalho = (LinearLayout) findViewById(R.id.Cabecalho);
+                LinearLayout layoutCabecalho = findViewById(R.id.Cabecalho);
+
                 NomeConversa = new Button(this);
                 NomeConversa.setText("Mensagens Salvas");
                 NomeConversa.setTransformationMethod(null);
@@ -82,6 +87,7 @@ public class MensagensSalvas extends AppCompatActivity {
                 NomeConversa.setBackground(CabecalhoChat);
                 NomeConversa.setGravity(Gravity.START);
                 NomeConversa.setClickable(false);
+
                 layoutCabecalho.addView(NomeConversa);
 
                 for(int i=0;i<response.getJSONArray("MENSAGENS").length();i++) {
@@ -105,11 +111,10 @@ public class MensagensSalvas extends AppCompatActivity {
                     stringBolhaMsgmDireita.setSpan(new AbsoluteSizeSpan(12, true), 0, 10, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
                     LinearLayout layout = findViewById(R.id.ListaMensagensSalvas);
-                    Texto_Mensagem = new Button(this);
 
+                    Texto_Mensagem = new Button(this);
                     Texto_Mensagem.setTransformationMethod(null);
                     Texto_Mensagem.setTextColor(getResources().getColor(R.color.white));
-
                     Texto_Mensagem.setBackground(Bolha_direita);
                     Texto_Mensagem.setText(stringBolhaMsgmDireita);
                     Texto_Mensagem.setGravity(Gravity.CENTER);
@@ -208,8 +213,8 @@ public class MensagensSalvas extends AppCompatActivity {
 
         final String idMensagem = a;
 
-        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
-                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
+                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
                 + "&idmensagem=" + idMensagem;
 
         client = new AsyncHttpClient();
@@ -223,8 +228,6 @@ public class MensagensSalvas extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
                 startActivity(intent);
             }
@@ -232,8 +235,7 @@ public class MensagensSalvas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -242,9 +244,7 @@ public class MensagensSalvas extends AppCompatActivity {
     @Override
     public void onBackPressed() {//VOLTAR PARA LISTA DE CONVERSAS RECENTES
 
-        final String login = getIntent().getStringExtra("Login");
-
-        URL =  getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -254,17 +254,14 @@ public class MensagensSalvas extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if(getIntent().getStringExtra("Login").equals("admin")) {
+
+                if(nomeUSU.equals("admin")) {
                     Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
                 else{
                     Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
@@ -273,15 +270,13 @@ public class MensagensSalvas extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    public void SalvarMensagem(View view) throws UnsupportedEncodingException {
+    public void SalvarMensagem(View view) {
 
         String texto_mensagem = Mensagem.getText().toString();
 
@@ -290,10 +285,10 @@ public class MensagensSalvas extends AppCompatActivity {
             return;
         }
 
-        String URLenviar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
+        String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",getIntent().getStringExtra("Login"));
+        params.put("remetente",nomeUSU);
         params.put("destinatario","ADefinirUsuario");
         params.put("texto_mensagem",texto_mensagem);
 
@@ -311,8 +306,6 @@ public class MensagensSalvas extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), MensagensSalvas.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL",getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", "ADefinirUsuario");
                 startActivity(intent);
             }
@@ -321,7 +314,7 @@ public class MensagensSalvas extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoSalvar.setClickable(true);
-                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_LONG).show();
+                Toast.makeText(MensagensSalvas.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -332,8 +325,6 @@ public class MensagensSalvas extends AppCompatActivity {
         String texto_mensagem =a;
 
         Intent intent = new Intent( this, EnviarMensagemSalva.class);
-        intent.putExtra("Login", getIntent().getStringExtra("Login"));
-        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
         intent.putExtra("TextoMensagemSalva", texto_mensagem);
         startActivity(intent);
 

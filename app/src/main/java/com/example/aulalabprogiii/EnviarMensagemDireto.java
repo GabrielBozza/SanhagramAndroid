@@ -2,26 +2,19 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -34,6 +27,7 @@ public class EnviarMensagemDireto extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -48,14 +42,16 @@ public class EnviarMensagemDireto extends AppCompatActivity {
         Destinatario = findViewById(R.id.NomeDestinatario);
         BotaoEnviar = findViewById(R.id.BotaoEnviar_Direto);
 
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
+
     }
 
     @Override
     public void onBackPressed() {//VOLTAR PARA LISTA DE CONVERSAS RECENTES
 
-        final String login = getIntent().getStringExtra("Login");
-
-        URL =  getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -65,17 +61,13 @@ public class EnviarMensagemDireto extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if(getIntent().getStringExtra("Login").equals("admin")) {
+                if(nomeUSU.equals("admin")) {
                     Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
                 else{
                     Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
@@ -84,9 +76,7 @@ public class EnviarMensagemDireto extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(EnviarMensagemDireto.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(EnviarMensagemDireto.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -102,10 +92,10 @@ public class EnviarMensagemDireto extends AppCompatActivity {
             return;
         }
 
-        String URLenviar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
+        String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
-        params.put("remetente",getIntent().getStringExtra("Login"));
+        params.put("remetente",nomeUSU);
         params.put("destinatario",destinatario);
         params.put("texto_mensagem",texto_mensagem);
 
@@ -123,8 +113,6 @@ public class EnviarMensagemDireto extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL",getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", Destinatario.getText().toString());
                 startActivity(intent);
             }
@@ -134,7 +122,6 @@ public class EnviarMensagemDireto extends AppCompatActivity {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoEnviar.setClickable(true);
                 Toast.makeText(EnviarMensagemDireto.this, "Erro - Usuário/Grupo não encontrado!", Toast.LENGTH_SHORT).show();
-
             }
         });
 

@@ -3,8 +3,10 @@ package com.example.aulalabprogiii;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +25,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class AdminAlterarUsuario extends AppCompatActivity {
 
+    String PrefixoURL,nomeUSU;
     TextView nomeUsu;
     EditText emailUsu,senhaUsu,datanascUsu;
     Button BotaoSalvar;
@@ -44,13 +47,19 @@ public class AdminAlterarUsuario extends AppCompatActivity {
 
         String resultado = getIntent().getStringExtra("UsuarioAlterar");
 
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
+
         try {
+
             JSONObject response = new JSONObject(resultado);
-            System.out.println(resultado);
+
             nomeUsu.setText(response.getJSONArray("USUARIOALTERAR").getJSONObject(0).get("nome").toString());
             emailUsu.setText(response.getJSONArray("USUARIOALTERAR").getJSONObject(0).get("email").toString());
             senhaUsu.setText(response.getJSONArray("USUARIOALTERAR").getJSONObject(0).get("senha").toString());
             datanascUsu.setText(response.getJSONArray("USUARIOALTERAR").getJSONObject(0).get("datanasc").toString());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -61,8 +70,8 @@ public class AdminAlterarUsuario extends AppCompatActivity {
 
         String nomeUsuarioExcluir = nomeUsu.getText().toString();
 
-        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirUsuario&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login") + "&nomeusuario="+ nomeUsuarioExcluir;
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirUsuario&dispositivo=android"
+                + "&login=" + nomeUSU + "&nomeusuario="+ nomeUsuarioExcluir;
 
         if(nomeUsuarioExcluir.equals("admin")){ //NÃO PODE DELETAR O ADMIN - SUICÍDIO
             Toast.makeText(AdminAlterarUsuario.this, "Não se mate!!!! Não deixo!", Toast.LENGTH_LONG).show();
@@ -75,24 +84,19 @@ public class AdminAlterarUsuario extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
+                Toast.makeText(AdminAlterarUsuario.this, "Usuário removido com sucesso!", Toast.LENGTH_SHORT).show();
 
                 json = response;
-                if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Toast.makeText(AdminAlterarUsuario.this, "Usuário removido com sucesso!", Toast.LENGTH_LONG).show();
-                    Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
-                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaUsuarios", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                intent.putExtra("ListaUsuarios", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -111,10 +115,10 @@ public class AdminAlterarUsuario extends AppCompatActivity {
         }
         BotaoSalvar.setClickable(false);
 
-        String URLAlterarCadastro = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarUsuario&dispositivo=android";
+        String URLAlterarCadastro = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarUsuario&dispositivo=android";
 
         params = new RequestParams();
-        params.put("login",getIntent().getStringExtra("Login"));
+        params.put("login",nomeUSU);
         params.put("nome",NomeUsu);
         params.put("email",EmailUsu);
         params.put("senha",SenhaUsu);
@@ -126,13 +130,12 @@ public class AdminAlterarUsuario extends AppCompatActivity {
             @Override
             public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                 super.onSuccess(statusCode, headers, response);
-                Toast.makeText(AdminAlterarUsuario.this, "Cadastro alterado com sucesso!", Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminAlterarUsuario.this, "Cadastro alterado com sucesso!", Toast.LENGTH_SHORT).show();
 
                 json = response;
+
                 Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
                 intent.putExtra("ListaUsuarios", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
@@ -140,8 +143,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 BotaoSalvar.setClickable(true);
-                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -149,9 +151,7 @@ public class AdminAlterarUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        final String login = getIntent().getStringExtra("Login");
-
-        String URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + login;
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android" + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -161,21 +161,16 @@ public class AdminAlterarUsuario extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaUsuarios", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarUsuarios.class);
+                intent.putExtra("ListaUsuarios", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminAlterarUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
     }

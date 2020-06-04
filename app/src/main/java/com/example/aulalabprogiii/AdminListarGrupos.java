@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class AdminListarGrupos extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -36,6 +39,10 @@ public class AdminListarGrupos extends AppCompatActivity {
         setContentView(R.layout.activity_admin_listar_grupos);
 
         String resultado = getIntent().getStringExtra("ListaGrupos");
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
 
         try {
 
@@ -144,9 +151,7 @@ public class AdminListarGrupos extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        final String login = getIntent().getStringExtra("Login");
-
-        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        URL = PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -156,27 +161,16 @@ public class AdminListarGrupos extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                intent.putExtra("ListaConversas", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -185,8 +179,8 @@ public class AdminListarGrupos extends AppCompatActivity {
 
         final String nomeGrupo = a;
 
-        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuariosDoGrupo&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login") + "&nomeGrupo=" + nomeGrupo;
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuariosDoGrupo&dispositivo=android"
+                + "&login=" + nomeUSU + "&nomeGrupo=" + nomeGrupo;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -200,17 +194,13 @@ public class AdminListarGrupos extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), AdminAlterarGrupo.class);
                 intent.putExtra("UsuariosGrupo", json.toString());
                 intent.putExtra("NomeGrupo", nomeGrupo);
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -218,8 +208,8 @@ public class AdminListarGrupos extends AppCompatActivity {
 
     public void CriarGrupo(View view) {
 
-        URL = getIntent().getStringExtra("PrefixoURL") +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login");
+        URL = PrefixoURL +  "/SanhagramServletsJSP/UsuarioControlador?acao=listarUsuarios&dispositivo=android"
+                + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -232,20 +222,16 @@ public class AdminListarGrupos extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AdminCriarGrupo.class);
                 intent.putExtra("ListaUsuarios", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListarGrupos.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
 
 }

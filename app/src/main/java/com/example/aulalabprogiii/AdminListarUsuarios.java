@@ -2,7 +2,9 @@ package com.example.aulalabprogiii;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +26,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     AsyncHttpClient client;
     JSONObject json;
@@ -36,6 +39,10 @@ public class AdminListarUsuarios extends AppCompatActivity {
         setContentView(R.layout.activity_admin_listar_usuarios);
 
         String resultado = getIntent().getStringExtra("ListaUsuarios");
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
 
         try {
 
@@ -144,9 +151,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        final String login = getIntent().getStringExtra("Login");
-
-        URL = getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        URL = PrefixoURL+ IdentificadorURL + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -156,27 +161,16 @@ public class AdminListarUsuarios extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if (getIntent().getStringExtra("Login").equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
-                    intent.putExtra("ListaConversas", json.toString());
-                    startActivity(intent);
-                }
+
+                Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                intent.putExtra("ListaConversas", json.toString());
+                startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListarUsuarios.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListarUsuarios.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -185,8 +179,8 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
         final String nomeUsuario = a;
 
-        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarCadastro&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login") + "&nomeUsuario=" + nomeUsuario;
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=alterarCadastro&dispositivo=android"
+                + "&login=" + nomeUSU + "&nomeUsuario=" + nomeUsuario;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -199,17 +193,13 @@ public class AdminListarUsuarios extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), AdminAlterarUsuario.class);
                 intent.putExtra("UsuarioAlterar", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 startActivity(intent);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(AdminListarUsuarios.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(AdminListarUsuarios.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -218,10 +208,7 @@ public class AdminListarUsuarios extends AppCompatActivity {
     public void abrirTelaCadastroUsuario(View view){
 
         Intent intent = new Intent( this, AdminCadastrarUsuario.class);
-        intent.putExtra("Login", getIntent().getStringExtra("Login"));
-        intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
         startActivity(intent);
-
     }
 
 }

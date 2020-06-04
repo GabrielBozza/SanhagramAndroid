@@ -3,8 +3,10 @@ package com.example.aulalabprogiii;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.text.SpannableString;
@@ -28,8 +30,6 @@ import com.loopj.android.http.RequestParams;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-
 import cz.msebera.android.httpclient.Header;
 
 public class ChatUsuario extends AppCompatActivity {
@@ -40,6 +40,7 @@ public class ChatUsuario extends AppCompatActivity {
 
     String IdentificadorURL = "/SanhagramServletsJSP/UsuarioControlador?acao=listarConversas&dispositivo=android";
     String URL = "";
+    String PrefixoURL,nomeUSU;
 
     RequestParams params;
     AsyncHttpClient client;
@@ -55,7 +56,10 @@ public class ChatUsuario extends AppCompatActivity {
         mScrollView = findViewById(R.id.chatScrollView);
 
         String resultado = getIntent().getStringExtra("MensagensConversa");
-        String login = getIntent().getStringExtra("Login");
+
+        SharedPreferences prefs = this.getSharedPreferences("USUARIO_AUTENTICADO", Context.MODE_PRIVATE);
+        PrefixoURL = prefs.getString("PREFIXO_URL", "");
+        nomeUSU = prefs.getString("LOGIN", "");
 
         GradientDrawable Botao_Enviar = new GradientDrawable();
         Botao_Enviar.setColor(getResources().getColor(R.color.colorAccent));
@@ -194,7 +198,7 @@ public class ChatUsuario extends AppCompatActivity {
                     Texto_Mensagem.setTransformationMethod(null);
                     Texto_Mensagem.setTextColor(getResources().getColor(R.color.white));
 
-                    if(remetente.equals(login)) {
+                    if(remetente.equals(nomeUSU)) {
                         Texto_Mensagem.setBackground(Bolha_direita);
                         Texto_Mensagem.setText(stringBolhaMsgmDireita);
                         Texto_Mensagem.setGravity(Gravity.END);
@@ -288,9 +292,7 @@ public class ChatUsuario extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        final String login = getIntent().getStringExtra("Login");
-
-        URL =  getIntent().getStringExtra("PrefixoURL") + IdentificadorURL + "&login=" + login;
+        URL =  PrefixoURL + IdentificadorURL + "&login=" + nomeUSU;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -300,17 +302,14 @@ public class ChatUsuario extends AppCompatActivity {
                 super.onSuccess(statusCode, headers, response);
 
                 json = response;
-                if(getIntent().getStringExtra("Login").equals("admin")) {
+
+                if(nomeUSU.equals("admin")) {
                     Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
                 else{
                     Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", login);
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
@@ -320,16 +319,15 @@ public class ChatUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
-
             }
         });
 
     }
 
-    public void EnviarMensagem(View view) throws UnsupportedEncodingException {
+    public void EnviarMensagem(View view) {
 
         String texto_mensagem = Mensagem.getText().toString();
-        final String remetente = getIntent().getStringExtra("Login");
+        final String remetente = nomeUSU;
         final String destinatario = getIntent().getStringExtra("Destinatario");
 
         if (texto_mensagem.matches("")) {
@@ -337,7 +335,7 @@ public class ChatUsuario extends AppCompatActivity {
             return;
         }
 
-        String URLenviar = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
+        String URLenviar = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=enviarMsgm&dispositivo=android";
 
         params = new RequestParams();
         params.put("remetente",remetente);
@@ -358,8 +356,6 @@ public class ChatUsuario extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", remetente);
-                intent.putExtra("PrefixoURL",getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", destinatario);
                 startActivity(intent);
             }
@@ -378,8 +374,8 @@ public class ChatUsuario extends AppCompatActivity {
 
         String nomeGrupo = a ;
 
-        URL =  getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=sairDoGrupo&dispositivo=android"
-                + "&login=" + getIntent().getStringExtra("Login") + "&nomeGrupo=" + nomeGrupo;
+        URL =  PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=sairDoGrupo&dispositivo=android"
+                + "&login=" + nomeUSU + "&nomeGrupo=" + nomeGrupo;
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -390,17 +386,14 @@ public class ChatUsuario extends AppCompatActivity {
                 Toast.makeText(ChatUsuario.this, "Você saiu do grupo!", Toast.LENGTH_SHORT).show();
 
                 json = response;
-                if(getIntent().getStringExtra("Login").equals("admin")) {
+
+                if(nomeUSU.equals("admin")) {
                     Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
                 else{
                     Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                    intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                    intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                     intent.putExtra("ListaConversas", json.toString());
                     startActivity(intent);
                 }
@@ -410,7 +403,6 @@ public class ChatUsuario extends AppCompatActivity {
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
                 Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
-
             }
         });
     }
@@ -419,8 +411,8 @@ public class ChatUsuario extends AppCompatActivity {
 
         final String idMensagem = a;
 
-        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
-                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario")
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirMsgm&dispositivo=android"
+                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario")
                 + "&idmensagem=" + idMensagem;
 
         client = new AsyncHttpClient();
@@ -434,8 +426,6 @@ public class ChatUsuario extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
                 startActivity(intent);
             }
@@ -443,9 +433,7 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-
-                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -453,8 +441,8 @@ public class ChatUsuario extends AppCompatActivity {
 
     public void Refresh(View view) {
 
-        URL = getIntent().getStringExtra("PrefixoURL") + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
-                + "&remetente=" + getIntent().getStringExtra("Login") + "&destinatario=" + getIntent().getStringExtra("Destinatario");
+        URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=listarMsgm&dispositivo=android"
+                + "&remetente=" + nomeUSU + "&destinatario=" + getIntent().getStringExtra("Destinatario");
 
         client = new AsyncHttpClient();
         client.get(URL, new JsonHttpResponseHandler() {
@@ -467,8 +455,6 @@ public class ChatUsuario extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(), ChatUsuario.class);
                 intent.putExtra("MensagensConversa", json.toString());
-                intent.putExtra("Login", getIntent().getStringExtra("Login"));
-                intent.putExtra("PrefixoURL", getIntent().getStringExtra("PrefixoURL"));
                 intent.putExtra("Destinatario", getIntent().getStringExtra("Destinatario"));
                 startActivity(intent);
             }
@@ -476,8 +462,7 @@ public class ChatUsuario extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
                 super.onFailure(statusCode, headers, responseString, throwable);
-                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_LONG).show();
-
+                Toast.makeText(ChatUsuario.this, "Erro!", Toast.LENGTH_SHORT).show();
             }
         });
 
