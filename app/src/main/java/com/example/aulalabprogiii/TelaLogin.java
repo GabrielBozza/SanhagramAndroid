@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import cz.msebera.android.httpclient.Header;
@@ -58,18 +59,19 @@ public class TelaLogin extends AppCompatActivity {
                     super.onSuccess(statusCode, headers, response);
                     Toast.makeText(TelaLogin.this, "Login automático "+nomeUSU+" !", Toast.LENGTH_SHORT).show();
                     json = response;
-                    if(nomeUSU.equals("admin")) {
-                        Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                        intent.putExtra("Login", nomeUSU);
-                        intent.putExtra("ListaConversas", json.toString());
-                        startActivity(intent);
-                    }
-                    else{
-                        Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                        intent.putExtra("Login", nomeUSU);
-                        intent.putExtra("ListaConversas", json.toString());
-                        startActivity(intent);
-                    }
+
+                        if(nomeUSU.equals("admin")) {
+                            Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                            intent.putExtra("Login", nomeUSU);
+                            intent.putExtra("ListaConversas", json.toString());
+                            startActivity(intent);
+                        }
+                        else{
+                            Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                            intent.putExtra("Login", nomeUSU);
+                            intent.putExtra("ListaConversas", json.toString());
+                            startActivity(intent);
+                        }
                 }
 
                 @Override
@@ -109,17 +111,25 @@ public class TelaLogin extends AppCompatActivity {
 
                         json = response;
 
-                        if(nomeUSU.equals("admin")) {
-                            Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
-                            intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
-                            intent.putExtra("ListaConversas", json.toString());
-                            startActivity(intent);
-                        }
-                        else{
-                            Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
-                            intent.putExtra("Login", nomeUSU);//PARA MANTER REF AO USUARIO
-                            intent.putExtra("ListaConversas", json.toString());
-                            startActivity(intent);
+                        try {
+                            if(json.getString("RESULTADO").equals("SUCESSO") && nomeUSU.equals("admin")) {
+                                Intent intent = new Intent(getApplicationContext(), AdminListaConversas.class);
+                                intent.putExtra("Login", nomeUSU);
+                                intent.putExtra("ListaConversas", json.toString());
+                                startActivity(intent);
+                            }
+                            else if (json.getString("RESULTADO").equals("SUCESSO")){
+                                Intent intent = new Intent(getApplicationContext(), ListaConversas.class);
+                                intent.putExtra("Login", nomeUSU);
+                                intent.putExtra("ListaConversas", json.toString());
+                                startActivity(intent);
+                            }
+                            else {
+                                Login.setClickable(true);
+                                Toast.makeText(TelaLogin.this, "Erro!", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
 
