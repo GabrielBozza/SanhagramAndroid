@@ -1,8 +1,10 @@
 package com.example.aulalabprogiii;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.GradientDrawable;
@@ -181,6 +183,58 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
     }
 
+    public void ConfirmacaoExcluir(final View view){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(AdminAlterarGrupo.this);
+        builder.setCancelable(true);
+        builder.setTitle("Excluir Grupo");
+        builder.setMessage("Você deseja excluir o Grupo? Todas as mensagens deste Grupo serão apagadas!");
+        builder.setPositiveButton("Sim",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        ExcluirGrupo(view);
+                    }
+                });
+        builder.setNegativeButton("Não", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void ExcluirGrupo(View view){
+
+        String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=excluirGrupo&dispositivo=android"
+                + "&login=" + nomeUSU + "&nomeGrupo=" + getIntent().getStringExtra("NomeGrupo")
+                + "&chaveUSU="+chaveUSU;
+
+        client = new AsyncHttpClient();
+        client.get(URL, new JsonHttpResponseHandler() {
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Toast.makeText(AdminAlterarGrupo.this, "Grupo removido com sucesso!", Toast.LENGTH_SHORT).show();
+
+                json = response;
+
+                Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
+                intent.putExtra("ListaGrupos", json.toString());
+                startActivity(intent);
+
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                super.onFailure(statusCode, headers, responseString, throwable);
+                Toast.makeText(AdminAlterarGrupo.this, "Erro!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
  public void RemoverDoGrupo(String a){
 
      String URL = PrefixoURL + "/SanhagramServletsJSP/UsuarioControlador?acao=removerDoGrupo&dispositivo=android"
@@ -197,12 +251,11 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
              json = response;
 
-             if (nomeUSU.equals("admin")) {
-                 Intent intent = new Intent(getApplicationContext(), AdminAlterarGrupo.class);
-                 intent.putExtra("UsuariosGrupo", json.toString());
-                 intent.putExtra("NomeGrupo", getIntent().getStringExtra("NomeGrupo"));
-                 startActivity(intent);
-             }
+             Intent intent = new Intent(getApplicationContext(), AdminAlterarGrupo.class);
+             intent.putExtra("UsuariosGrupo", json.toString());
+             intent.putExtra("NomeGrupo", getIntent().getStringExtra("NomeGrupo"));
+             startActivity(intent);
+
          }
 
          @Override
@@ -258,11 +311,9 @@ public class AdminAlterarGrupo extends AppCompatActivity {
 
                 json = response;
 
-                if (nomeUSU.equals("admin")) {
-                    Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
-                    intent.putExtra("ListaGrupos", json.toString());
-                    startActivity(intent);
-                }
+                Intent intent = new Intent(getApplicationContext(), AdminListarGrupos.class);
+                intent.putExtra("ListaGrupos", json.toString());
+                startActivity(intent);
             }
 
             @Override

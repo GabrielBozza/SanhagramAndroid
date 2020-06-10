@@ -13,11 +13,12 @@
         android:layout_height="fill_parent"
         android:orientation="vertical"
         tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="1dp">
+        tools:layout_editor_absoluteY="1dp"
+        tools:ignore="MissingConstraints">
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="335dp"
+            android:layout_height="315dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="32dp"
@@ -40,7 +41,7 @@
 
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="335dp"
+            android:layout_height="315dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="32dp"
@@ -61,5 +62,18 @@
             </ScrollView>
 
         </androidx.cardview.widget.CardView>
+
+        <Button
+            android:id="@+id/BotaoExcluirGrupo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/botao_excluir"
+            android:onClick="ConfirmacaoExcluir"
+            android:text="EXCLUIR GRUPO"
+            android:textColor="@color/white" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
